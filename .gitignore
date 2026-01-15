@@ -2,5 +2,6 @@ node_modules/
 dist/
 .env
 data/events.json
+data/session.txt
 reports/*.html
 *.log

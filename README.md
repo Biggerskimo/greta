@@ -5,9 +5,12 @@ Cat presence reporter that monitors a Telegram group for camera images and gener
 ## How It Works
 
 1. A camera posts images with "in" or "out" text to a Telegram group when the cat enters/exits
-2. A Telegram bot receives these images and uses OCR to detect the text
-3. Events are stored in a JSON file
-4. HTML reports can be generated with charts showing presence patterns
+2. Either:
+   - **Real-time**: A Telegram bot receives new images as they arrive
+   - **Historical**: Fetch past images from the group using your Telegram account
+3. OCR detects the "in" or "out" text in images
+4. Events are stored in a JSON file
+5. HTML reports can be generated with charts showing presence patterns
 
 ## Setup
 
@@ -66,6 +69,27 @@ npm run report -- --from 2025-01-01 --to 2025-01-15
 
 Reports are saved to the `reports/` directory.
 
+### Fetch Historical Data
+
+To import past messages from your Telegram group, you need API credentials:
+
+1. Go to https://my.telegram.org/apps and create an application
+2. Add to your `.env`:
+   ```
+   TELEGRAM_API_ID=your_api_id
+   TELEGRAM_API_HASH=your_api_hash
+   ```
+3. Run:
+   ```bash
+   # Last 30 days
+   npm run fetch
+
+   # Custom date range
+   npm run fetch -- --from 2025-01-01 --to 2025-01-15
+   ```
+
+On first run, you'll be prompted to enter your phone number and verification code. Your session is saved for future use.
+
 ## OCR Calibration
 
 If the OCR isn't detecting "in"/"out" text correctly, adjust the crop region in `.env`:
@@ -85,12 +109,13 @@ The app will also try full-image OCR as a fallback if cropping fails.
 greta/
 ├── src/
 │   ├── index.ts      # CLI entry point
-│   ├── telegram.ts   # Telegram bot
+│   ├── telegram.ts   # Telegram bot (real-time)
+│   ├── history.ts    # Historical fetch (MTProto)
 │   ├── ocr.ts        # OCR detection
 │   ├── storage.ts    # JSON storage
 │   ├── report.ts     # Report generation
 │   └── types.ts      # TypeScript types
-├── data/             # Event storage
+├── data/             # Event storage & session
 ├── reports/          # Generated reports
 └── templates/        # HTML templates
 ```

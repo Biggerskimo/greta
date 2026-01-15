@@ -7,17 +7,25 @@
     "build": "tsc",
     "start": "node dist/index.js",
     "dev": "tsc && node dist/index.js",
-    "report": "node dist/index.js report"
+    "report": "node dist/index.js report",
+    "fetch": "node dist/index.js fetch"
   },
-  "keywords": ["cat", "presence", "telegram", "ocr"],
+  "keywords": [
+    "cat",
+    "presence",
+    "telegram",
+    "ocr"
+  ],
   "license": "MIT",
   "type": "module",
   "dependencies": {
     "chart.js": "^4.4.1",
     "dotenv": "^16.3.1",
     "handlebars": "^4.7.8",
+    "input": "^1.0.1",
     "node-telegram-bot-api": "^0.66.0",
     "sharp": "^0.33.2",
+    "telegram": "^2.26.22",
     "tesseract.js": "^5.0.4"
   },
   "devDependencies": {
