@@ -1,0 +1,963 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Praesentia Gretae</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: #f5f5f5;
+      color: #333;
+      line-height: 1.6;
+      padding: 20px;
+    }
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    h1 {
+      text-align: center;
+      margin-bottom: 10px;
+      color: #2c3e50;
+    }
+    .subtitle {
+      text-align: center;
+      color: #666;
+      margin-bottom: 30px;
+    }
+    .info-box {
+      max-width: 800px;
+      margin: 0 auto 30px;
+      padding: 20px;
+      background: white;
+      border-radius: 10px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+      font-size: 0.9rem;
+      line-height: 1.8;
+    }
+    .info-box h3 {
+      margin-bottom: 15px;
+      color: #2c3e50;
+    }
+    .info-box ul {
+      margin-left: 20px;
+      margin-bottom: 15px;
+    }
+    .info-box p {
+      margin-bottom: 10px;
+    }
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 20px;
+      margin-bottom: 30px;
+    }
+    .stat-card {
+      background: white;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+      text-align: center;
+    }
+    .stat-card.inside {
+      border-left: 4px solid #27ae60;
+    }
+    .stat-card.outside {
+      border-left: 4px solid #e74c3c;
+    }
+    .stat-card.unknown {
+      border-left: 4px solid #95a5a6;
+    }
+    .stat-value {
+      font-size: 2.5rem;
+      font-weight: bold;
+      color: #3498db;
+    }
+    .stat-label {
+      color: #666;
+      font-size: 0.9rem;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+    .chart-container {
+      background: white;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+      margin-bottom: 30px;
+    }
+    .chart-title {
+      font-size: 1.2rem;
+      margin-bottom: 15px;
+      color: #2c3e50;
+    }
+    .events-table {
+      background: white;
+      border-radius: 10px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+      overflow: hidden;
+    }
+    .events-table h2 {
+      padding: 15px 20px;
+      background: #3498db;
+      color: white;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+    th, td {
+      padding: 12px 20px;
+      text-align: left;
+      border-bottom: 1px solid #eee;
+    }
+    th {
+      background: #f8f9fa;
+      font-weight: 600;
+      color: #666;
+    }
+    tr:hover {
+      background: #f8f9fa;
+    }
+    .direction-in {
+      color: #27ae60;
+      font-weight: bold;
+    }
+    .direction-out {
+      color: #e74c3c;
+      font-weight: bold;
+    }
+    .direction-invalid {
+      color: #95a5a6;
+      font-weight: bold;
+    }
+    .prey-indicator {
+      display: inline-block;
+      margin-left: 5px;
+      padding: 2px 6px;
+      background: #f39c12;
+      color: white;
+      border-radius: 3px;
+      font-size: 0.75rem;
+      font-weight: bold;
+    }
+    .footer {
+      text-align: center;
+      margin-top: 30px;
+      color: #999;
+      font-size: 0.85rem;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Praesentia Gretae</h1>
+    <p class="subtitle">2019-08-01 bis 2026-01-31 (Zeitzone: UTC+1)</p>
+
+    <div class="info-box">
+      <h3>Erkennungslogik</h3>
+      <p>Kamerabilder werden mit OCR analysiert. Die Ereignisse werden wie folgt klassifiziert:</p>
+      <ul>
+        <li><strong style="color: #e74c3c;">OUT:</strong> Bild enthält 4× "out - skipped prey detection"</li>
+        <li><strong style="color: #27ae60;">IN (ohne Beute):</strong> Bild enthält 4× "in - No prey detected"</li>
+        <li><strong style="color: #27ae60;">IN (mit Beute):</strong> Bild enthält mindestens 1× "in - Prey detected" <span class="prey-indicator">BEUTE</span></li>
+        <li><strong style="color: #95a5a6;">INVALID:</strong> Alle anderen Fälle (werden nicht für Anwesenheitsberechnung verwendet)</li>
+      </ul>
+
+      <h3 style="margin-top: 25px;">Anwesenheitsberechnung</h3>
+      <p>Die Anwesenheit wird basierend auf aufeinanderfolgenden gültigen Ereignissen berechnet:</p>
+      <ul>
+        <li><strong style="color: #27ae60;">Drinnen:</strong> Zeitraum zwischen "in" und "out" Ereignissen (auch über mehrere Tage hinweg)</li>
+        <li><strong style="color: #e74c3c;">Draußen:</strong> Zeitraum zwischen "out" und "in" Ereignissen (auch über mehrere Tage hinweg)</li>
+        <li><strong style="color: #95a5a6;">Unbekannt:</strong> Zeiträume zwischen gleichen Ereignissen ("in"→"in" oder "out"→"out"), sowie Zeiträume ohne aufgezeichnete Ereignisse</li>
+      </ul>
+      <p style="margin-top: 15px; color: #666; font-size: 0.85rem;">Jeder Tag wird auf genau 24 Stunden aufgefüllt. Fehlende Zeit wird als "Unbekannt" markiert. Ereignisse mit "invalid" werden in der Ereignistabelle angezeigt, aber nicht für die Anwesenheitsberechnung verwendet.</p>
+    </div>
+
+    <div class="stats-grid">
+      <div class="stat-card inside">
+        <div class="stat-value">13345.2</div>
+        <div class="stat-label">Stunden Drinnen</div>
+      </div>
+      <div class="stat-card unknown">
+        <div class="stat-value">34629.4</div>
+        <div class="stat-label">Stunden Unbekannt</div>
+      </div>
+      <div class="stat-card outside">
+        <div class="stat-value">9073.4</div>
+        <div class="stat-label">Stunden Draußen</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value">2841</div>
+        <div class="stat-label">Eintritte</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value">2814</div>
+        <div class="stat-label">Austritte</div>
+      </div>
+    </div>
+
+    <div class="chart-container">
+      <h3 class="chart-title">Tägliche Aufenthaltszeit</h3>
+      <canvas id="dailyChart"></canvas>
+    </div>
+
+    <div class="chart-container">
+      <h3 class="chart-title">Aktivität nach Tageszeit (Anzahl Ereignisse)</h3>
+      <canvas id="hourlyActivityChart"></canvas>
+    </div>
+
+    <div class="chart-container">
+      <h3 class="chart-title">Aufenthaltszeit nach Tageszeit (Prozent)</h3>
+      <canvas id="hourlyPresenceChart"></canvas>
+    </div>
+
+    <div class="chart-container">
+      <h3 class="chart-title">Aufenthaltszeit nach Monat im Jahr (Prozent)</h3>
+      <canvas id="monthlyPresenceChart"></canvas>
+    </div>
+
+    <div class="chart-container">
+      <h3 class="chart-title">Beutezählung pro Monat</h3>
+      <canvas id="monthlyPreyChart"></canvas>
+    </div>
+
+    <div class="chart-container">
+      <h3 class="chart-title">Aufenthaltszeit nach Monat</h3>
+      <canvas id="monthlyTimeSeriesChart"></canvas>
+    </div>
+
+    <div class="chart-container">
+      <h3 class="chart-title">Eintritte und Austritte nach Monat</h3>
+      <canvas id="monthlyActivityChart"></canvas>
+    </div>
+
+    <div class="events-table">
+      <h2>Letzte 50 Ereignisse</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>Zeit</th>
+            <th>Richtung</th>
+            <th>Konfidenz</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>2026-01-15T12:46:03.000Z</td>
+            <td class="direction-in">
+              in
+              
+            </td>
+            <td>0.9</td>
+          </tr>
+          <tr>
+            <td>2026-01-14T11:59:09.000Z</td>
+            <td class="direction-in">
+              in
+              
+            </td>
+            <td>0.9</td>
+          </tr>
+          <tr>
+            <td>2026-01-14T11:48:59.000Z</td>
+            <td class="direction-out">
+              out
+              
+            </td>
+            <td>0.9</td>
+          </tr>
+          <tr>
+            <td>2026-01-14T06:21:54.000Z</td>
+            <td class="direction-invalid">
+              invalid
+              
+            </td>
+            <td>0</td>
+          </tr>
+          <tr>
+            <td>2026-01-13T05:43:04.000Z</td>
+            <td class="direction-in">
+              in
+              
+            </td>
+            <td>0.9</td>
+          </tr>
+          <tr>
+            <td>2026-01-13T05:23:41.000Z</td>
+            <td class="direction-out">
+              out
+              
+            </td>
+            <td>0.9</td>
+          </tr>
+          <tr>
+            <td>2026-01-12T14:39:51.000Z</td>
+            <td class="direction-in">
+              in
+              
+            </td>
+            <td>0.9</td>
+          </tr>
+          <tr>
+            <td>2026-01-12T14:35:29.000Z</td>
+            <td class="direction-out">
+              out
+              
+            </td>
+            <td>0.9</td>
+          </tr>
+          <tr>
+            <td>2026-01-12T04:13:24.000Z</td>
+            <td class="direction-in">
+              in
+              
+            </td>
+            <td>0.9</td>
+          </tr>
+          <tr>
+            <td>2026-01-12T03:48:13.000Z</td>
+            <td class="direction-out">
+              out
+              
+            </td>
+            <td>0.9</td>
+          </tr>
+          <tr>
+            <td>2026-01-11T14:00:27.000Z</td>
+            <td class="direction-in">
+              in
+              
+            </td>
+            <td>0.9</td>
+          </tr>
+          <tr>
+            <td>2026-01-10T23:51:54.000Z</td>
+            <td class="direction-in">
+              in
+              
+            </td>
+            <td>0.9</td>
+          </tr>
+          <tr>
+            <td>2026-01-10T21:35:04.000Z</td>
+            <td class="direction-in">
+              in
+              
+            </td>
+            <td>0.9</td>
+          </tr>
+          <tr>
+            <td>2026-01-09T08:00:45.000Z</td>
+            <td class="direction-in">
+              in
+              
+            </td>
+            <td>0.9</td>
+          </tr>
+          <tr>
+            <td>2026-01-09T07:24:52.000Z</td>
+            <td class="direction-in">
+              in
+              
+            </td>
+            <td>0.9</td>
+          </tr>
+          <tr>
+            <td>2026-01-09T06:48:28.000Z</td>
+            <td class="direction-in">
+              in
+              
+            </td>
+            <td>0.9</td>
+          </tr>
+          <tr>
+            <td>2026-01-08T06:51:26.000Z</td>
+            <td class="direction-in">
+              in
+              
+            </td>
+            <td>0.9</td>
+          </tr>
+          <tr>
+            <td>2026-01-07T04:27:19.000Z</td>
+            <td class="direction-in">
+              in
+              
+            </td>
+            <td>0.9</td>
+          </tr>
+          <tr>
+            <td>2026-01-07T03:37:56.000Z</td>
+            <td class="direction-out">
+              out
+              
+            </td>
+            <td>0.9</td>
+          </tr>
+          <tr>
+            <td>2026-01-06T13:36:06.000Z</td>
+            <td class="direction-in">
+              in
+              
+            </td>
+            <td>0.9</td>
+          </tr>
+          <tr>
+            <td>2026-01-06T01:06:54.000Z</td>
+            <td class="direction-in">
+              in
+              
+            </td>
+            <td>0.9</td>
+          </tr>
+          <tr>
+            <td>2026-01-05T13:46:09.000Z</td>
+            <td class="direction-in">
+              in
+              
+            </td>
+            <td>0.9</td>
+          </tr>
+          <tr>
+            <td>2026-01-04T18:09:36.000Z</td>
+            <td class="direction-in">
+              in
+              
+            </td>
+            <td>0.9</td>
+          </tr>
+          <tr>
+            <td>2026-01-04T04:34:45.000Z</td>
+            <td class="direction-in">
+              in
+              
+            </td>
+            <td>0.9</td>
+          </tr>
+          <tr>
+            <td>2026-01-04T03:07:37.000Z</td>
+            <td class="direction-out">
+              out
+              
+            </td>
+            <td>0.9</td>
+          </tr>
+          <tr>
+            <td>2026-01-04T00:51:39.000Z</td>
+            <td class="direction-in">
+              in
+              
+            </td>
+            <td>0.9</td>
+          </tr>
+          <tr>
+            <td>2026-01-03T13:36:07.000Z</td>
+            <td class="direction-in">
+              in
+              
+            </td>
+            <td>0.9</td>
+          </tr>
+          <tr>
+            <td>2026-01-02T21:09:44.000Z</td>
+            <td class="direction-in">
+              in
+              
+            </td>
+            <td>0.9</td>
+          </tr>
+          <tr>
+            <td>2026-01-02T18:19:46.000Z</td>
+            <td class="direction-in">
+              in
+              
+            </td>
+            <td>0.9</td>
+          </tr>
+          <tr>
+            <td>2026-01-02T15:45:42.000Z</td>
+            <td class="direction-in">
+              in
+              
+            </td>
+            <td>0.9</td>
+          </tr>
+          <tr>
+            <td>2026-01-01T10:00:55.000Z</td>
+            <td class="direction-in">
+              in
+              
+            </td>
+            <td>0.9</td>
+          </tr>
+          <tr>
+            <td>2026-01-01T09:24:12.000Z</td>
+            <td class="direction-out">
+              out
+              
+            </td>
+            <td>0.9</td>
+          </tr>
+          <tr>
+            <td>2025-12-30T12:17:26.000Z</td>
+            <td class="direction-in">
+              in
+              
+            </td>
+            <td>0.9</td>
+          </tr>
+          <tr>
+            <td>2025-12-30T10:36:42.000Z</td>
+            <td class="direction-in">
+              in
+              
+            </td>
+            <td>0.9</td>
+          </tr>
+          <tr>
+            <td>2025-12-29T16:53:26.000Z</td>
+            <td class="direction-invalid">
+              invalid
+              
+            </td>
+            <td>0</td>
+          </tr>
+          <tr>
+            <td>2025-12-29T16:53:05.000Z</td>
+            <td class="direction-invalid">
+              invalid
+              
+            </td>
+            <td>0</td>
+          </tr>
+          <tr>
+            <td>2025-12-29T16:52:17.000Z</td>
+            <td class="direction-invalid">
+              invalid
+              
+            </td>
+            <td>0</td>
+          </tr>
+          <tr>
+            <td>2025-12-29T16:51:46.000Z</td>
+            <td class="direction-invalid">
+              invalid
+              
+            </td>
+            <td>0</td>
+          </tr>
+          <tr>
+            <td>2025-12-29T16:51:16.000Z</td>
+            <td class="direction-invalid">
+              invalid
+              
+            </td>
+            <td>0</td>
+          </tr>
+          <tr>
+            <td>2025-12-29T16:50:46.000Z</td>
+            <td class="direction-invalid">
+              invalid
+              
+            </td>
+            <td>0</td>
+          </tr>
+          <tr>
+            <td>2025-12-29T16:50:14.000Z</td>
+            <td class="direction-invalid">
+              invalid
+              
+            </td>
+            <td>0</td>
+          </tr>
+          <tr>
+            <td>2025-12-29T16:49:39.000Z</td>
+            <td class="direction-invalid">
+              invalid
+              
+            </td>
+            <td>0</td>
+          </tr>
+          <tr>
+            <td>2025-12-29T16:49:01.000Z</td>
+            <td class="direction-invalid">
+              invalid
+              
+            </td>
+            <td>0</td>
+          </tr>
+          <tr>
+            <td>2025-12-29T16:48:38.000Z</td>
+            <td class="direction-invalid">
+              invalid
+              
+            </td>
+            <td>0</td>
+          </tr>
+          <tr>
+            <td>2025-12-29T16:48:12.000Z</td>
+            <td class="direction-invalid">
+              invalid
+              
+            </td>
+            <td>0</td>
+          </tr>
+          <tr>
+            <td>2025-12-29T16:47:43.000Z</td>
+            <td class="direction-invalid">
+              invalid
+              
+            </td>
+            <td>0</td>
+          </tr>
+          <tr>
+            <td>2025-12-29T16:41:00.000Z</td>
+            <td class="direction-invalid">
+              invalid
+              
+            </td>
+            <td>0</td>
+          </tr>
+          <tr>
+            <td>2025-12-29T15:22:45.000Z</td>
+            <td class="direction-invalid">
+              invalid
+              
+            </td>
+            <td>0</td>
+          </tr>
+          <tr>
+            <td>2025-12-29T11:35:54.000Z</td>
+            <td class="direction-in">
+              in
+              <span class="prey-indicator">BEUTE</span>
+            </td>
+            <td>0.9</td>
+          </tr>
+          <tr>
+            <td>2025-12-28T18:03:58.000Z</td>
+            <td class="direction-in">
+              in
+              
+            </td>
+            <td>0.9</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <p class="footer">Erstellt am 2026-01-15T20:47:19.360Z</p>
+  </div>
+
+  <script>
+    const dailyStats = [{"date":"2025-02-02","hoursInside":14.753333333333334,"hoursOutside":2.578333333333333,"hoursUnknown":6.668333333333333,"entries":2,"exits":2},{"date":"2025-02-03","hoursInside":0.7036111111111111,"hoursOutside":0.38166666666666665,"hoursUnknown":22.914722222222224,"entries":4,"exits":0},{"date":"2025-02-04","hoursInside":4.953611111111111,"hoursOutside":0.9577777777777777,"hoursUnknown":18.08861111111111,"entries":3,"exits":1},{"date":"2025-02-05","hoursInside":10.214722222222223,"hoursOutside":4.238333333333333,"hoursUnknown":9.546944444444444,"entries":2,"exits":1},{"date":"2025-02-06","hoursInside":2.035277777777778,"hoursOutside":0,"hoursUnknown":21.96472222222222,"entries":3,"exits":0},{"date":"2025-02-07","hoursInside":20.468333333333334,"hoursOutside":0.9608333333333333,"hoursUnknown":2.5708333333333333,"entries":3,"exits":2},{"date":"2025-02-08","hoursInside":12.90861111111111,"hoursOutside":1.4441666666666666,"hoursUnknown":9.647222222222222,"entries":3,"exits":1},{"date":"2025-02-09","hoursInside":14.970833333333335,"hoursOutside":4.4225,"hoursUnknown":4.6066666666666665,"entries":3,"exits":2},{"date":"2025-02-10","hoursInside":6.667222222222222,"hoursOutside":1.61,"hoursUnknown":15.722777777777777,"entries":3,"exits":2},{"date":"2025-02-11","hoursInside":22.105,"hoursOutside":1.895,"hoursUnknown":0,"entries":1,"exits":1},{"date":"2025-02-12","hoursInside":9.473055555555556,"hoursOutside":0.5541666666666667,"hoursUnknown":13.972777777777777,"entries":2,"exits":1},{"date":"2025-02-13","hoursInside":7.793055555555555,"hoursOutside":1.7266666666666666,"hoursUnknown":14.480277777777777,"entries":2,"exits":2},{"date":"2025-02-14","hoursInside":0.4736111111111111,"hoursOutside":0.385,"hoursUnknown":23.14138888888889,"entries":3,"exits":0},{"date":"2025-02-15","hoursInside":10.934166666666666,"hoursOutside":3.5080555555555555,"hoursUnknown":9.557777777777778,"entries":3,"exits":2},{"date":"2025-02-16","hoursInside":8.590277777777779,"hoursOutside":1.2133333333333334,"hoursUnknown":14.19638888888889,"entries":4,"exits":2},{"date":"2025-02-17","hoursInside":10.742777777777777,"hoursOutside":1.1861111111111111,"hoursUnknown":12.071111111111112,"entries":3,"exits":1},{"date":"2025-02-18","hoursInside":8.990833333333335,"hoursOutside":0.5541666666666667,"hoursUnknown":14.455,"entries":2,"exits":1},{"date":"2025-02-19","hoursInside":5.1525,"hoursOutside":4.979444444444445,"hoursUnknown":13.868055555555557,"entries":4,"exits":3},{"date":"2025-02-20","hoursInside":6.450277777777778,"hoursOutside":3.7216666666666667,"hoursUnknown":13.828055555555554,"entries":3,"exits":1},{"date":"2025-02-21","hoursInside":4.551666666666667,"hoursOutside":2.2444444444444445,"hoursUnknown":17.20388888888889,"entries":3,"exits":1},{"date":"2025-02-22","hoursInside":13.776388888888889,"hoursOutside":10.223611111111111,"hoursUnknown":0,"entries":3,"exits":4},{"date":"2025-02-23","hoursInside":7.920555555555556,"hoursOutside":9.65611111111111,"hoursUnknown":6.423333333333333,"entries":2,"exits":2},{"date":"2025-02-24","hoursInside":18.168333333333333,"hoursOutside":5.831666666666667,"hoursUnknown":0,"entries":2,"exits":2},{"date":"2025-02-25","hoursInside":11.853333333333333,"hoursOutside":12.146666666666667,"hoursUnknown":0,"entries":2,"exits":2},{"date":"2025-02-26","hoursInside":21.891666666666666,"hoursOutside":2.1083333333333334,"hoursUnknown":0,"entries":1,"exits":1},{"date":"2025-02-27","hoursInside":15.35527777777778,"hoursOutside":4.685555555555556,"hoursUnknown":3.9591666666666665,"entries":3,"exits":3},{"date":"2025-02-28","hoursInside":21.231944444444444,"hoursOutside":2.7680555555555557,"hoursUnknown":0,"entries":3,"exits":2},{"date":"2025-03-01","hoursInside":20.663333333333334,"hoursOutside":3.336666666666667,"hoursUnknown":0,"entries":3,"exits":3},{"date":"2025-03-02","hoursInside":18.2225,"hoursOutside":5.7775,"hoursUnknown":0,"entries":3,"exits":3},{"date":"2025-03-03","hoursInside":13.150277777777777,"hoursOutside":10.849722222222223,"hoursUnknown":0,"entries":2,"exits":3},{"date":"2025-03-04","hoursInside":16.21527777777778,"hoursOutside":7.784722222222222,"hoursUnknown":0,"entries":5,"exits":4},{"date":"2025-03-05","hoursInside":14.074166666666665,"hoursOutside":9.925833333333333,"hoursUnknown":0,"entries":3,"exits":3},{"date":"2025-03-06","hoursInside":11.43888888888889,"hoursOutside":12.56111111111111,"hoursUnknown":0,"entries":2,"exits":2},{"date":"2025-03-07","hoursInside":11.674444444444445,"hoursOutside":12.325555555555555,"hoursUnknown":0,"entries":2,"exits":2},{"date":"2025-03-08","hoursInside":10.74638888888889,"hoursOutside":3.813888888888889,"hoursUnknown":9.439722222222223,"entries":1,"exits":2},{"date":"2025-03-09","hoursInside":7.416111111111111,"hoursOutside":14.182222222222222,"hoursUnknown":2.401666666666667,"entries":2,"exits":2},{"date":"2025-03-10","hoursInside":9.057500000000001,"hoursOutside":6.4336111111111105,"hoursUnknown":8.508888888888889,"entries":4,"exits":2},{"date":"2025-03-11","hoursInside":6.5075,"hoursOutside":7.1066666666666665,"hoursUnknown":10.385833333333334,"entries":0,"exits":2},{"date":"2025-03-12","hoursInside":14.90611111111111,"hoursOutside":9.093888888888888,"hoursUnknown":0,"entries":2,"exits":1},{"date":"2025-03-13","hoursInside":12.998888888888889,"hoursOutside":11.001111111111111,"hoursUnknown":0,"entries":2,"exits":2},{"date":"2025-03-14","hoursInside":7.781944444444445,"hoursOutside":6.759166666666667,"hoursUnknown":9.458888888888888,"entries":4,"exits":2},{"date":"2025-03-15","hoursInside":8.533055555555556,"hoursOutside":3.752222222222222,"hoursUnknown":11.714722222222223,"entries":2,"exits":1},{"date":"2025-03-16","hoursInside":12.367777777777778,"hoursOutside":2.3808333333333334,"hoursUnknown":9.251388888888888,"entries":3,"exits":2},{"date":"2025-03-17","hoursInside":13.855,"hoursOutside":5.928055555555556,"hoursUnknown":4.216944444444445,"entries":4,"exits":4},{"date":"2025-03-18","hoursInside":1.4616666666666667,"hoursOutside":1.2291666666666667,"hoursUnknown":21.309166666666666,"entries":2,"exits":0},{"date":"2025-03-19","hoursInside":12.650833333333335,"hoursOutside":11.349166666666665,"hoursUnknown":0,"entries":2,"exits":2},{"date":"2025-03-20","hoursInside":13.071111111111112,"hoursOutside":10.928888888888888,"hoursUnknown":0,"entries":2,"exits":2},{"date":"2025-03-21","hoursInside":12.184722222222222,"hoursOutside":11.815277777777778,"hoursUnknown":0,"entries":2,"exits":3},{"date":"2025-03-22","hoursInside":7.466111111111111,"hoursOutside":11.198888888888888,"hoursUnknown":5.335,"entries":3,"exits":3},{"date":"2025-03-23","hoursInside":0,"hoursOutside":0,"hoursUnknown":24,"entries":3,"exits":0},{"date":"2025-03-24","hoursInside":12.087222222222222,"hoursOutside":7.208611111111111,"hoursUnknown":4.704166666666667,"entries":1,"exits":1},{"date":"2025-03-25","hoursInside":10.618333333333334,"hoursOutside":7.630277777777778,"hoursUnknown":5.751388888888889,"entries":2,"exits":1},{"date":"2025-03-26","hoursInside":0.021111111111111112,"hoursOutside":0,"hoursUnknown":23.97888888888889,"entries":4,"exits":0},{"date":"2025-03-27","hoursInside":8.790555555555555,"hoursOutside":5.3125,"hoursUnknown":9.896944444444445,"entries":2,"exits":1},{"date":"2025-03-28","hoursInside":9.829444444444444,"hoursOutside":4.6352777777777785,"hoursUnknown":9.535277777777777,"entries":3,"exits":2},{"date":"2025-03-29","hoursInside":4.429166666666666,"hoursOutside":1.6880555555555556,"hoursUnknown":17.88277777777778,"entries":1,"exits":1},{"date":"2025-03-30","hoursInside":8.705277777777777,"hoursOutside":1.0169444444444444,"hoursUnknown":14.277777777777779,"entries":2,"exits":1},{"date":"2025-03-31","hoursInside":4.6002777777777775,"hoursOutside":1.5044444444444445,"hoursUnknown":17.89527777777778,"entries":6,"exits":1},{"date":"2025-04-01","hoursInside":10.988333333333332,"hoursOutside":9.628333333333334,"hoursUnknown":3.3833333333333333,"entries":4,"exits":3},{"date":"2025-04-02","hoursInside":15.198611111111111,"hoursOutside":8.801388888888889,"hoursUnknown":0,"entries":1,"exits":2},{"date":"2025-04-03","hoursInside":15.240277777777779,"hoursOutside":8.759722222222221,"hoursUnknown":0,"entries":3,"exits":2},{"date":"2025-04-04","hoursInside":10.614722222222223,"hoursOutside":5.1850000000000005,"hoursUnknown":8.200277777777778,"entries":3,"exits":2},{"date":"2025-04-05","hoursInside":7.133333333333333,"hoursOutside":10.460833333333333,"hoursUnknown":6.405833333333334,"entries":3,"exits":2},{"date":"2025-04-06","hoursInside":5.801666666666667,"hoursOutside":0.7847222222222222,"hoursUnknown":17.41361111111111,"entries":2,"exits":2},{"date":"2025-04-07","hoursInside":10.288055555555555,"hoursOutside":7.6883333333333335,"hoursUnknown":6.02361111111111,"entries":4,"exits":1},{"date":"2025-04-08","hoursInside":9.20861111111111,"hoursOutside":7.024166666666667,"hoursUnknown":7.767222222222223,"entries":4,"exits":3},{"date":"2025-04-09","hoursInside":0.8875,"hoursOutside":1.5211111111111113,"hoursUnknown":21.59138888888889,"entries":1,"exits":4},{"date":"2025-04-10","hoursInside":8.20138888888889,"hoursOutside":15.79861111111111,"hoursUnknown":0,"entries":3,"exits":2},{"date":"2025-04-11","hoursInside":6.860555555555556,"hoursOutside":17.139444444444443,"hoursUnknown":0,"entries":1,"exits":2},{"date":"2025-04-12","hoursInside":0.7841666666666666,"hoursOutside":23.215833333333336,"hoursUnknown":0,"entries":3,"exits":2},{"date":"2025-04-13","hoursInside":1.501111111111111,"hoursOutside":7.805000000000001,"hoursUnknown":14.693888888888889,"entries":2,"exits":4},{"date":"2025-04-14","hoursInside":4.385,"hoursOutside":19.615000000000002,"hoursUnknown":0,"entries":2,"exits":2},{"date":"2025-04-15","hoursInside":0.29444444444444445,"hoursOutside":9.1325,"hoursUnknown":14.573055555555555,"entries":1,"exits":3},{"date":"2025-04-16","hoursInside":3.837777777777778,"hoursOutside":20.162222222222223,"hoursUnknown":0,"entries":2,"exits":2},{"date":"2025-04-17","hoursInside":0.5719444444444445,"hoursOutside":4.604166666666667,"hoursUnknown":18.823888888888888,"entries":1,"exits":2},{"date":"2025-04-18","hoursInside":1.7111111111111112,"hoursOutside":9.208055555555555,"hoursUnknown":13.080833333333334,"entries":5,"exits":2},{"date":"2025-04-19","hoursInside":0.9941666666666666,"hoursOutside":3.3538888888888887,"hoursUnknown":19.651944444444446,"entries":3,"exits":1},{"date":"2025-04-20","hoursInside":5.044166666666667,"hoursOutside":17.18277777777778,"hoursUnknown":1.7730555555555556,"entries":2,"exits":2},{"date":"2025-04-21","hoursInside":4.681666666666667,"hoursOutside":4.890555555555555,"hoursUnknown":14.427777777777777,"entries":3,"exits":2},{"date":"2025-04-22","hoursInside":16.664722222222224,"hoursOutside":4.7125,"hoursUnknown":2.622777777777778,"entries":2,"exits":3},{"date":"2025-04-23","hoursInside":7.780555555555556,"hoursOutside":12.468055555555557,"hoursUnknown":3.751388888888889,"entries":1,"exits":2},{"date":"2025-04-24","hoursInside":3.9780555555555552,"hoursOutside":12.82138888888889,"hoursUnknown":7.200555555555556,"entries":4,"exits":2},{"date":"2025-04-25","hoursInside":4.393888888888889,"hoursOutside":2.083333333333333,"hoursUnknown":17.52277777777778,"entries":4,"exits":2},{"date":"2025-04-26","hoursInside":8.178055555555556,"hoursOutside":8.930277777777778,"hoursUnknown":6.891666666666667,"entries":4,"exits":5},{"date":"2025-04-27","hoursInside":10.210277777777778,"hoursOutside":7.672777777777777,"hoursUnknown":6.116944444444444,"entries":3,"exits":2},{"date":"2025-04-28","hoursInside":6.685277777777777,"hoursOutside":3.8655555555555554,"hoursUnknown":13.449166666666667,"entries":2,"exits":1},{"date":"2025-04-29","hoursInside":7.506944444444445,"hoursOutside":1.5730555555555557,"hoursUnknown":14.92,"entries":2,"exits":1},{"date":"2025-04-30","hoursInside":10.621666666666666,"hoursOutside":11.389444444444445,"hoursUnknown":1.988888888888889,"entries":1,"exits":1},{"date":"2025-05-01","hoursInside":6.6416666666666675,"hoursOutside":9.1425,"hoursUnknown":8.215833333333334,"entries":2,"exits":3},{"date":"2025-05-02","hoursInside":8.310833333333333,"hoursOutside":10.983333333333334,"hoursUnknown":4.7058333333333335,"entries":2,"exits":2},{"date":"2025-05-03","hoursInside":4.900555555555556,"hoursOutside":9.482222222222223,"hoursUnknown":9.617222222222223,"entries":3,"exits":2},{"date":"2025-05-04","hoursInside":0.14888888888888888,"hoursOutside":4.3372222222222225,"hoursUnknown":19.51388888888889,"entries":3,"exits":2},{"date":"2025-05-05","hoursInside":14.190000000000001,"hoursOutside":7.236944444444444,"hoursUnknown":2.5730555555555554,"entries":4,"exits":3},{"date":"2025-05-06","hoursInside":1.8380555555555556,"hoursOutside":0,"hoursUnknown":22.161944444444444,"entries":3,"exits":0},{"date":"2025-05-07","hoursInside":6.968333333333333,"hoursOutside":11.639166666666668,"hoursUnknown":5.3925,"entries":3,"exits":4},{"date":"2025-05-08","hoursInside":5.247777777777777,"hoursOutside":13.481944444444444,"hoursUnknown":5.270277777777777,"entries":3,"exits":2},{"date":"2025-05-09","hoursInside":15.25,"hoursOutside":8.75,"hoursUnknown":0,"entries":3,"exits":2},{"date":"2025-05-10","hoursInside":6.924166666666666,"hoursOutside":5.289444444444444,"hoursUnknown":11.786388888888888,"entries":4,"exits":2},{"date":"2025-05-11","hoursInside":9.611111111111112,"hoursOutside":14.38888888888889,"hoursUnknown":0,"entries":3,"exits":3},{"date":"2025-05-12","hoursInside":6.807222222222222,"hoursOutside":17.110277777777778,"hoursUnknown":0.0825,"entries":3,"exits":3},{"date":"2025-05-13","hoursInside":0,"hoursOutside":0,"hoursUnknown":24,"entries":1,"exits":0},{"date":"2025-05-14","hoursInside":0,"hoursOutside":0,"hoursUnknown":24,"entries":1,"exits":0},{"date":"2025-05-15","hoursInside":4.043888888888889,"hoursOutside":10.978055555555557,"hoursUnknown":8.978055555555555,"entries":4,"exits":2},{"date":"2025-05-16","hoursInside":11.866944444444446,"hoursOutside":8.969999999999999,"hoursUnknown":3.1630555555555557,"entries":4,"exits":3},{"date":"2025-05-17","hoursInside":0,"hoursOutside":11.686666666666667,"hoursUnknown":12.313333333333333,"entries":3,"exits":0},{"date":"2025-05-18","hoursInside":10.500555555555556,"hoursOutside":6.155555555555555,"hoursUnknown":7.3438888888888885,"entries":4,"exits":2},{"date":"2025-05-19","hoursInside":8.063333333333333,"hoursOutside":7.556111111111111,"hoursUnknown":8.380555555555556,"entries":0,"exits":2},{"date":"2025-05-20","hoursInside":9.275,"hoursOutside":11.346944444444444,"hoursUnknown":3.3780555555555556,"entries":1,"exits":2},{"date":"2025-05-21","hoursInside":5.999722222222223,"hoursOutside":12.772499999999999,"hoursUnknown":5.227777777777778,"entries":4,"exits":2},{"date":"2025-05-22","hoursInside":6.972222222222221,"hoursOutside":8.866111111111111,"hoursUnknown":8.161666666666667,"entries":3,"exits":1},{"date":"2025-05-23","hoursInside":7.861944444444444,"hoursOutside":2.7133333333333334,"hoursUnknown":13.424722222222222,"entries":3,"exits":2},{"date":"2025-05-24","hoursInside":9.764166666666666,"hoursOutside":13.89611111111111,"hoursUnknown":0.3397222222222222,"entries":3,"exits":3},{"date":"2025-05-25","hoursInside":12.917777777777777,"hoursOutside":4.454444444444444,"hoursUnknown":6.627777777777778,"entries":4,"exits":3},{"date":"2025-05-26","hoursInside":7.226111111111111,"hoursOutside":6.806666666666667,"hoursUnknown":9.967222222222222,"entries":2,"exits":2},{"date":"2025-05-27","hoursInside":7.824166666666667,"hoursOutside":16.175833333333333,"hoursUnknown":0,"entries":1,"exits":1},{"date":"2025-05-28","hoursInside":5.9255555555555555,"hoursOutside":6.606111111111112,"hoursUnknown":11.468333333333334,"entries":4,"exits":1},{"date":"2025-05-29","hoursInside":1.731111111111111,"hoursOutside":6.561944444444444,"hoursUnknown":15.706944444444446,"entries":2,"exits":2},{"date":"2025-05-30","hoursInside":0,"hoursOutside":7.2675,"hoursUnknown":16.7325,"entries":1,"exits":0},{"date":"2025-05-31","hoursInside":17.02111111111111,"hoursOutside":3.448611111111111,"hoursUnknown":3.5302777777777776,"entries":1,"exits":1},{"date":"2025-06-01","hoursInside":0.1527777777777778,"hoursOutside":5.4430555555555555,"hoursUnknown":18.40416666666667,"entries":3,"exits":1},{"date":"2025-06-02","hoursInside":0,"hoursOutside":0,"hoursUnknown":24,"entries":1,"exits":0},{"date":"2025-06-03","hoursInside":2.99,"hoursOutside":19.729166666666668,"hoursUnknown":1.2808333333333333,"entries":1,"exits":1},{"date":"2025-06-04","hoursInside":9.858055555555556,"hoursOutside":7.654722222222222,"hoursUnknown":6.487222222222222,"entries":2,"exits":1},{"date":"2025-06-05","hoursInside":0.20194444444444445,"hoursOutside":1.83,"hoursUnknown":21.96805555555556,"entries":4,"exits":1},{"date":"2025-06-06","hoursInside":17.593333333333334,"hoursOutside":6.406666666666666,"hoursUnknown":0,"entries":1,"exits":1},{"date":"2025-06-07","hoursInside":0,"hoursOutside":1.7569444444444444,"hoursUnknown":22.243055555555557,"entries":3,"exits":0},{"date":"2025-06-08","hoursInside":0.8488888888888889,"hoursOutside":0,"hoursUnknown":23.15111111111111,"entries":2,"exits":0},{"date":"2025-06-09","hoursInside":8.393888888888888,"hoursOutside":15.606111111111112,"hoursUnknown":0,"entries":1,"exits":2},{"date":"2025-06-10","hoursInside":8.961666666666666,"hoursOutside":9.579722222222221,"hoursUnknown":5.458611111111111,"entries":1,"exits":2},{"date":"2025-06-11","hoursInside":7.015,"hoursOutside":16.985,"hoursUnknown":0,"entries":1,"exits":1},{"date":"2025-06-12","hoursInside":15.734444444444444,"hoursOutside":4.531944444444444,"hoursUnknown":3.733611111111111,"entries":1,"exits":1},{"date":"2025-06-13","hoursInside":0,"hoursOutside":10.087777777777777,"hoursUnknown":13.912222222222223,"entries":0,"exits":2},{"date":"2025-06-14","hoursInside":3.1772222222222224,"hoursOutside":6.379444444444445,"hoursUnknown":14.443333333333333,"entries":1,"exits":2},{"date":"2025-06-15","hoursInside":0,"hoursOutside":24,"hoursUnknown":0,"entries":0,"exits":0},{"date":"2025-06-16","hoursInside":12.93,"hoursOutside":5.866388888888889,"hoursUnknown":5.203611111111111,"entries":2,"exits":1},{"date":"2025-06-17","hoursInside":10.56861111111111,"hoursOutside":13.43138888888889,"hoursUnknown":0,"entries":2,"exits":2},{"date":"2025-06-18","hoursInside":14.241944444444444,"hoursOutside":9.758055555555556,"hoursUnknown":0,"entries":1,"exits":1},{"date":"2025-06-19","hoursInside":4.378333333333333,"hoursOutside":19.621666666666666,"hoursUnknown":0,"entries":1,"exits":1},{"date":"2025-06-20","hoursInside":19.775277777777777,"hoursOutside":4.224722222222222,"hoursUnknown":0,"entries":1,"exits":0},{"date":"2025-06-21","hoursInside":24,"hoursOutside":0,"hoursUnknown":0,"entries":0,"exits":0},{"date":"2025-06-22","hoursInside":21.47861111111111,"hoursOutside":2.5213888888888887,"hoursUnknown":0,"entries":1,"exits":2},{"date":"2025-06-23","hoursInside":11.106111111111112,"hoursOutside":12.893888888888888,"hoursUnknown":0,"entries":1,"exits":1},{"date":"2025-06-24","hoursInside":0,"hoursOutside":4.012777777777778,"hoursUnknown":19.987222222222222,"entries":1,"exits":0},{"date":"2025-06-25","hoursInside":5.201944444444444,"hoursOutside":13.455277777777777,"hoursUnknown":5.342777777777778,"entries":1,"exits":1},{"date":"2025-06-26","hoursInside":4.791388888888889,"hoursOutside":19.20861111111111,"hoursUnknown":0,"entries":1,"exits":1},{"date":"2025-06-27","hoursInside":5.770555555555555,"hoursOutside":18.229444444444447,"hoursUnknown":0,"entries":1,"exits":1},{"date":"2025-06-28","hoursInside":0,"hoursOutside":3.3297222222222222,"hoursUnknown":20.670277777777777,"entries":1,"exits":0},{"date":"2025-06-29","hoursInside":0,"hoursOutside":0,"hoursUnknown":24,"entries":0,"exits":0},{"date":"2025-06-30","hoursInside":19.395555555555557,"hoursOutside":0,"hoursUnknown":4.604444444444445,"entries":1,"exits":0},{"date":"2025-07-01","hoursInside":24,"hoursOutside":0,"hoursUnknown":0,"entries":0,"exits":0},{"date":"2025-07-02","hoursInside":22.34888888888889,"hoursOutside":0,"hoursUnknown":1.6511111111111112,"entries":0,"exits":1},{"date":"2025-07-03","hoursInside":0,"hoursOutside":1.6094444444444445,"hoursUnknown":22.390555555555558,"entries":0,"exits":2},{"date":"2025-07-04","hoursInside":19.40138888888889,"hoursOutside":4.598611111111111,"hoursUnknown":0,"entries":1,"exits":0},{"date":"2025-07-05","hoursInside":0.6219444444444444,"hoursOutside":23.378055555555555,"hoursUnknown":0,"entries":0,"exits":1},{"date":"2025-07-06","hoursInside":0,"hoursOutside":24,"hoursUnknown":0,"entries":0,"exits":0},{"date":"2025-07-07","hoursInside":0,"hoursOutside":4.681111111111111,"hoursUnknown":19.31888888888889,"entries":2,"exits":0},{"date":"2025-07-08","hoursInside":7.577222222222222,"hoursOutside":12.2275,"hoursUnknown":4.195277777777778,"entries":1,"exits":1},{"date":"2025-07-09","hoursInside":5.3075,"hoursOutside":18.6925,"hoursUnknown":0,"entries":1,"exits":1},{"date":"2025-07-10","hoursInside":16.803333333333335,"hoursOutside":7.196666666666667,"hoursUnknown":0,"entries":1,"exits":1},{"date":"2025-07-11","hoursInside":3.4619444444444443,"hoursOutside":20.53805555555556,"hoursUnknown":0,"entries":1,"exits":1},{"date":"2025-07-12","hoursInside":5.35361111111111,"hoursOutside":17.579722222222223,"hoursUnknown":1.0666666666666667,"entries":2,"exits":3},{"date":"2025-07-13","hoursInside":4.977777777777778,"hoursOutside":13.345277777777778,"hoursUnknown":5.676944444444445,"entries":3,"exits":4},{"date":"2025-07-14","hoursInside":5.119166666666667,"hoursOutside":9.162222222222223,"hoursUnknown":9.71861111111111,"entries":3,"exits":2},{"date":"2025-07-15","hoursInside":8.126388888888888,"hoursOutside":15.873611111111112,"hoursUnknown":0,"entries":3,"exits":3},{"date":"2025-07-16","hoursInside":2.2216666666666667,"hoursOutside":19.9375,"hoursUnknown":1.8408333333333333,"entries":2,"exits":1},{"date":"2025-07-17","hoursInside":6.332777777777778,"hoursOutside":12.350555555555557,"hoursUnknown":5.316666666666666,"entries":2,"exits":2},{"date":"2025-07-18","hoursInside":17.24111111111111,"hoursOutside":6.7588888888888885,"hoursUnknown":0,"entries":1,"exits":1},{"date":"2025-07-19","hoursInside":0,"hoursOutside":24,"hoursUnknown":0,"entries":0,"exits":0},{"date":"2025-07-20","hoursInside":3.41,"hoursOutside":6.481388888888889,"hoursUnknown":14.108611111111111,"entries":1,"exits":3},{"date":"2025-07-21","hoursInside":12.04,"hoursOutside":11.96,"hoursUnknown":0,"entries":2,"exits":2},{"date":"2025-07-22","hoursInside":0,"hoursOutside":0.7352777777777778,"hoursUnknown":23.264722222222222,"entries":2,"exits":0},{"date":"2025-07-23","hoursInside":0,"hoursOutside":0,"hoursUnknown":24,"entries":1,"exits":0},{"date":"2025-07-24","hoursInside":4.2716666666666665,"hoursOutside":0.7611111111111111,"hoursUnknown":18.967222222222222,"entries":3,"exits":3},{"date":"2025-07-25","hoursInside":7.944444444444445,"hoursOutside":12.544444444444444,"hoursUnknown":3.511111111111111,"entries":2,"exits":3},{"date":"2025-07-26","hoursInside":5.928333333333334,"hoursOutside":9.94638888888889,"hoursUnknown":8.125277777777777,"entries":3,"exits":1},{"date":"2025-07-27","hoursInside":7.693333333333333,"hoursOutside":6.803888888888889,"hoursUnknown":9.502777777777778,"entries":0,"exits":2},{"date":"2025-07-28","hoursInside":4.472499999999999,"hoursOutside":19.5275,"hoursUnknown":0,"entries":2,"exits":2},{"date":"2025-07-29","hoursInside":0,"hoursOutside":2.001388888888889,"hoursUnknown":21.99861111111111,"entries":1,"exits":0},{"date":"2025-07-30","hoursInside":1.6263888888888889,"hoursOutside":0,"hoursUnknown":22.37361111111111,"entries":4,"exits":0},{"date":"2025-07-31","hoursInside":19.664166666666667,"hoursOutside":4.335833333333333,"hoursUnknown":0,"entries":2,"exits":2},{"date":"2025-08-01","hoursInside":6.139444444444445,"hoursOutside":0.08194444444444444,"hoursUnknown":17.77861111111111,"entries":3,"exits":1},{"date":"2025-08-02","hoursInside":9.400277777777777,"hoursOutside":12.949722222222222,"hoursUnknown":1.65,"entries":2,"exits":4},{"date":"2025-08-03","hoursInside":16.665277777777778,"hoursOutside":7.334722222222222,"hoursUnknown":0,"entries":2,"exits":2},{"date":"2025-08-04","hoursInside":10.100277777777777,"hoursOutside":13.899722222222223,"hoursUnknown":0,"entries":3,"exits":3},{"date":"2025-08-05","hoursInside":8.199722222222222,"hoursOutside":5.443611111111111,"hoursUnknown":10.356666666666667,"entries":3,"exits":3},{"date":"2025-08-06","hoursInside":4.286666666666667,"hoursOutside":0.5611111111111111,"hoursUnknown":19.15222222222222,"entries":1,"exits":1},{"date":"2025-08-07","hoursInside":0.8705555555555555,"hoursOutside":0,"hoursUnknown":23.129444444444445,"entries":2,"exits":0},{"date":"2025-08-08","hoursInside":7.417777777777777,"hoursOutside":8.422222222222222,"hoursUnknown":8.16,"entries":0,"exits":2},{"date":"2025-08-09","hoursInside":0,"hoursOutside":1.5191666666666668,"hoursUnknown":22.480833333333333,"entries":1,"exits":0},{"date":"2025-08-10","hoursInside":3.9130555555555553,"hoursOutside":11.780833333333334,"hoursUnknown":8.306111111111111,"entries":3,"exits":1},{"date":"2025-08-11","hoursInside":8.771944444444445,"hoursOutside":15.228055555555557,"hoursUnknown":0,"entries":3,"exits":3},{"date":"2025-08-12","hoursInside":11.716388888888888,"hoursOutside":11.975555555555555,"hoursUnknown":0.3080555555555556,"entries":2,"exits":2},{"date":"2025-08-13","hoursInside":7.473333333333333,"hoursOutside":16.526666666666667,"hoursUnknown":0,"entries":4,"exits":3},{"date":"2025-08-14","hoursInside":10.795277777777777,"hoursOutside":13.204722222222221,"hoursUnknown":0,"entries":3,"exits":4},{"date":"2025-08-15","hoursInside":10.480555555555556,"hoursOutside":13.519444444444446,"hoursUnknown":0,"entries":2,"exits":2},{"date":"2025-08-16","hoursInside":14.816944444444445,"hoursOutside":9.183055555555557,"hoursUnknown":0,"entries":4,"exits":3},{"date":"2025-08-17","hoursInside":7.748055555555555,"hoursOutside":4.258611111111112,"hoursUnknown":11.993333333333332,"entries":4,"exits":2},{"date":"2025-08-18","hoursInside":13.95111111111111,"hoursOutside":8.024166666666666,"hoursUnknown":2.024722222222222,"entries":2,"exits":3},{"date":"2025-08-19","hoursInside":11.719999999999999,"hoursOutside":12.28,"hoursUnknown":0,"entries":3,"exits":4},{"date":"2025-08-20","hoursInside":13.941666666666666,"hoursOutside":4.658333333333333,"hoursUnknown":5.4,"entries":3,"exits":2},{"date":"2025-08-21","hoursInside":8.573333333333334,"hoursOutside":10.980555555555556,"hoursUnknown":4.446111111111112,"entries":4,"exits":2},{"date":"2025-08-22","hoursInside":10.866388888888888,"hoursOutside":12.909444444444444,"hoursUnknown":0.22416666666666665,"entries":3,"exits":2},{"date":"2025-08-23","hoursInside":9.605555555555556,"hoursOutside":1.9525000000000001,"hoursUnknown":12.441944444444445,"entries":3,"exits":3},{"date":"2025-08-24","hoursInside":12.775833333333335,"hoursOutside":7.093055555555555,"hoursUnknown":4.131111111111111,"entries":5,"exits":4},{"date":"2025-08-25","hoursInside":11.629999999999999,"hoursOutside":4.912777777777778,"hoursUnknown":7.457222222222223,"entries":4,"exits":3},{"date":"2025-08-26","hoursInside":10.909444444444444,"hoursOutside":1.8983333333333334,"hoursUnknown":11.192222222222222,"entries":1,"exits":2},{"date":"2025-08-27","hoursInside":7.024444444444445,"hoursOutside":7.615833333333333,"hoursUnknown":9.35972222222222,"entries":3,"exits":3},{"date":"2025-08-28","hoursInside":0,"hoursOutside":0,"hoursUnknown":24,"entries":1,"exits":0},{"date":"2025-08-29","hoursInside":0.9263888888888889,"hoursOutside":2.028611111111111,"hoursUnknown":21.045,"entries":4,"exits":1},{"date":"2025-08-30","hoursInside":9.529722222222222,"hoursOutside":8.721111111111112,"hoursUnknown":5.7491666666666665,"entries":2,"exits":1},{"date":"2025-08-31","hoursInside":13.500277777777779,"hoursOutside":10.499722222222223,"hoursUnknown":0,"entries":1,"exits":2},{"date":"2025-09-01","hoursInside":5.808055555555556,"hoursOutside":4.4319444444444445,"hoursUnknown":13.760000000000002,"entries":5,"exits":2},{"date":"2025-09-02","hoursInside":8.981944444444444,"hoursOutside":9.33,"hoursUnknown":5.688055555555556,"entries":4,"exits":3},{"date":"2025-09-03","hoursInside":6.766944444444444,"hoursOutside":1.2583333333333333,"hoursUnknown":15.974722222222223,"entries":2,"exits":1},{"date":"2025-09-04","hoursInside":12.652222222222223,"hoursOutside":6.770833333333334,"hoursUnknown":4.576944444444444,"entries":3,"exits":2},{"date":"2025-09-05","hoursInside":13.242777777777778,"hoursOutside":6.409166666666668,"hoursUnknown":4.348055555555556,"entries":6,"exits":4},{"date":"2025-09-06","hoursInside":15.116666666666667,"hoursOutside":8.883333333333333,"hoursUnknown":0,"entries":6,"exits":6},{"date":"2025-09-07","hoursInside":12.126388888888888,"hoursOutside":3.8569444444444443,"hoursUnknown":8.016666666666666,"entries":3,"exits":5},{"date":"2025-09-08","hoursInside":8.5725,"hoursOutside":11.09361111111111,"hoursUnknown":4.333888888888889,"entries":3,"exits":3},{"date":"2025-09-09","hoursInside":3.147222222222222,"hoursOutside":1.8194444444444444,"hoursUnknown":19.03333333333333,"entries":2,"exits":1},{"date":"2025-09-10","hoursInside":4.5,"hoursOutside":1.478888888888889,"hoursUnknown":18.02111111111111,"entries":3,"exits":1},{"date":"2025-09-11","hoursInside":7.615555555555556,"hoursOutside":2.658611111111111,"hoursUnknown":13.725833333333332,"entries":4,"exits":3},{"date":"2025-09-12","hoursInside":10.038055555555555,"hoursOutside":8.615555555555556,"hoursUnknown":5.346388888888889,"entries":4,"exits":3},{"date":"2025-09-13","hoursInside":15.860833333333334,"hoursOutside":8.139166666666668,"hoursUnknown":0,"entries":4,"exits":4},{"date":"2025-09-14","hoursInside":10.329166666666666,"hoursOutside":2.958611111111111,"hoursUnknown":10.712222222222223,"entries":4,"exits":2},{"date":"2025-09-15","hoursInside":8.551388888888889,"hoursOutside":6.6244444444444435,"hoursUnknown":8.824166666666667,"entries":5,"exits":7},{"date":"2025-09-16","hoursInside":16.435277777777777,"hoursOutside":7.564722222222223,"hoursUnknown":0,"entries":1,"exits":1},{"date":"2025-09-17","hoursInside":15.179166666666667,"hoursOutside":1.893333333333333,"hoursUnknown":6.9275,"entries":3,"exits":2},{"date":"2025-09-18","hoursInside":11.513611111111112,"hoursOutside":7.883333333333333,"hoursUnknown":4.603055555555556,"entries":4,"exits":3},{"date":"2025-09-19","hoursInside":12.875555555555556,"hoursOutside":11.124444444444444,"hoursUnknown":0,"entries":2,"exits":2},{"date":"2025-09-20","hoursInside":6.65,"hoursOutside":12.895555555555557,"hoursUnknown":4.454444444444444,"entries":3,"exits":4},{"date":"2025-09-21","hoursInside":9.000555555555556,"hoursOutside":3.871111111111111,"hoursUnknown":11.128333333333334,"entries":1,"exits":3},{"date":"2025-09-22","hoursInside":16.522777777777776,"hoursOutside":2.531111111111111,"hoursUnknown":4.946111111111111,"entries":3,"exits":4},{"date":"2025-09-23","hoursInside":8.008333333333333,"hoursOutside":0.5461111111111111,"hoursUnknown":15.445555555555556,"entries":6,"exits":1},{"date":"2025-09-24","hoursInside":15.555,"hoursOutside":8.445,"hoursUnknown":0,"entries":4,"exits":4},{"date":"2025-09-25","hoursInside":16.218888888888888,"hoursOutside":1.7538888888888888,"hoursUnknown":6.027222222222222,"entries":3,"exits":2},{"date":"2025-09-26","hoursInside":12.264166666666668,"hoursOutside":2.2783333333333333,"hoursUnknown":9.4575,"entries":3,"exits":3},{"date":"2025-09-27","hoursInside":7.879722222222222,"hoursOutside":6.3425,"hoursUnknown":9.777777777777779,"entries":2,"exits":1},{"date":"2025-09-28","hoursInside":7.560555555555556,"hoursOutside":12.10388888888889,"hoursUnknown":4.335555555555556,"entries":2,"exits":2},{"date":"2025-09-29","hoursInside":11.918055555555556,"hoursOutside":4.476111111111111,"hoursUnknown":7.605833333333333,"entries":2,"exits":1},{"date":"2025-09-30","hoursInside":8.500277777777779,"hoursOutside":1.4258333333333333,"hoursUnknown":14.073888888888888,"entries":4,"exits":2},{"date":"2025-10-01","hoursInside":3.5308333333333333,"hoursOutside":0.9813888888888889,"hoursUnknown":19.48777777777778,"entries":5,"exits":1},{"date":"2025-10-02","hoursInside":5.782222222222222,"hoursOutside":0,"hoursUnknown":18.21777777777778,"entries":4,"exits":0},{"date":"2025-10-03","hoursInside":12.8875,"hoursOutside":2.48,"hoursUnknown":8.6325,"entries":6,"exits":3},{"date":"2025-10-04","hoursInside":19.089166666666667,"hoursOutside":4.910833333333333,"hoursUnknown":0,"entries":3,"exits":3},{"date":"2025-10-05","hoursInside":14.269166666666667,"hoursOutside":3.4069444444444446,"hoursUnknown":6.323888888888888,"entries":4,"exits":3},{"date":"2025-10-06","hoursInside":10.704166666666667,"hoursOutside":0.6555555555555556,"hoursUnknown":12.640277777777778,"entries":2,"exits":1},{"date":"2025-10-07","hoursInside":16.59861111111111,"hoursOutside":2.4644444444444447,"hoursUnknown":4.936944444444444,"entries":2,"exits":1},{"date":"2025-10-08","hoursInside":5.6075,"hoursOutside":18.3925,"hoursUnknown":0,"entries":2,"exits":2},{"date":"2025-10-09","hoursInside":22.365277777777777,"hoursOutside":1.6347222222222222,"hoursUnknown":0,"entries":1,"exits":1},{"date":"2025-10-10","hoursInside":7.810277777777777,"hoursOutside":5.081388888888888,"hoursUnknown":11.108333333333334,"entries":4,"exits":2},{"date":"2025-10-11","hoursInside":14.788888888888888,"hoursOutside":3.498333333333333,"hoursUnknown":5.712777777777778,"entries":3,"exits":2},{"date":"2025-10-12","hoursInside":12.874999999999998,"hoursOutside":3.6775,"hoursUnknown":7.4475,"entries":2,"exits":3},{"date":"2025-10-13","hoursInside":7.713611111111112,"hoursOutside":1.8347222222222221,"hoursUnknown":14.451666666666666,"entries":2,"exits":1},{"date":"2025-10-14","hoursInside":20.37361111111111,"hoursOutside":3.626388888888889,"hoursUnknown":0,"entries":3,"exits":3},{"date":"2025-10-15","hoursInside":11.027777777777779,"hoursOutside":4.108333333333333,"hoursUnknown":8.863888888888889,"entries":4,"exits":4},{"date":"2025-10-16","hoursInside":11.380833333333332,"hoursOutside":4.098055555555556,"hoursUnknown":8.52111111111111,"entries":3,"exits":3},{"date":"2025-10-17","hoursInside":20.900555555555552,"hoursOutside":3.0994444444444444,"hoursUnknown":0,"entries":2,"exits":2},{"date":"2025-10-18","hoursInside":17.928055555555556,"hoursOutside":4.668055555555556,"hoursUnknown":1.403888888888889,"entries":4,"exits":3},{"date":"2025-10-19","hoursInside":13.318333333333333,"hoursOutside":0.8863888888888889,"hoursUnknown":9.795277777777777,"entries":5,"exits":2},{"date":"2025-10-20","hoursInside":16.31138888888889,"hoursOutside":1.9997222222222222,"hoursUnknown":5.688888888888889,"entries":3,"exits":1},{"date":"2025-10-21","hoursInside":13.387777777777778,"hoursOutside":10.612222222222222,"hoursUnknown":0,"entries":2,"exits":3},{"date":"2025-10-22","hoursInside":15.694166666666666,"hoursOutside":4.455,"hoursUnknown":3.8508333333333336,"entries":4,"exits":4},{"date":"2025-10-23","hoursInside":15.069444444444443,"hoursOutside":3.288055555555555,"hoursUnknown":5.6425,"entries":5,"exits":4},{"date":"2025-10-24","hoursInside":17.60638888888889,"hoursOutside":2.1597222222222223,"hoursUnknown":4.233888888888889,"entries":4,"exits":3},{"date":"2025-10-25","hoursInside":16.34138888888889,"hoursOutside":1.805,"hoursUnknown":5.853611111111111,"entries":2,"exits":3},{"date":"2025-10-26","hoursInside":8.763333333333334,"hoursOutside":2.4430555555555555,"hoursUnknown":12.793611111111112,"entries":5,"exits":4},{"date":"2025-10-27","hoursInside":22.859444444444446,"hoursOutside":1.1405555555555555,"hoursUnknown":0,"entries":3,"exits":3},{"date":"2025-10-28","hoursInside":6.338611111111111,"hoursOutside":4.564444444444445,"hoursUnknown":13.096944444444444,"entries":3,"exits":3},{"date":"2025-10-29","hoursInside":14.249444444444446,"hoursOutside":1.8627777777777779,"hoursUnknown":7.887777777777778,"entries":4,"exits":2},{"date":"2025-10-30","hoursInside":15.578055555555556,"hoursOutside":2.5525,"hoursUnknown":5.8694444444444445,"entries":3,"exits":2},{"date":"2025-10-31","hoursInside":7.144722222222223,"hoursOutside":2.4483333333333333,"hoursUnknown":14.406944444444445,"entries":5,"exits":2},{"date":"2025-11-01","hoursInside":19.821944444444444,"hoursOutside":4.178055555555556,"hoursUnknown":0,"entries":3,"exits":2},{"date":"2025-11-02","hoursInside":9.429166666666667,"hoursOutside":1.0794444444444444,"hoursUnknown":13.491388888888888,"entries":1,"exits":2},{"date":"2025-11-03","hoursInside":9.53361111111111,"hoursOutside":2.1822222222222223,"hoursUnknown":12.284166666666666,"entries":4,"exits":3},{"date":"2025-11-04","hoursInside":10.23,"hoursOutside":3.226111111111111,"hoursUnknown":10.54388888888889,"entries":5,"exits":3},{"date":"2025-11-05","hoursInside":6.321944444444444,"hoursOutside":0,"hoursUnknown":17.678055555555556,"entries":1,"exits":1},{"date":"2025-11-06","hoursInside":3.9325,"hoursOutside":1.6925,"hoursUnknown":18.375,"entries":4,"exits":1},{"date":"2025-11-07","hoursInside":15.710555555555555,"hoursOutside":1.2525,"hoursUnknown":7.036944444444444,"entries":3,"exits":3},{"date":"2025-11-08","hoursInside":17.650555555555556,"hoursOutside":4.833055555555556,"hoursUnknown":1.5163888888888888,"entries":2,"exits":4},{"date":"2025-11-09","hoursInside":7.062222222222223,"hoursOutside":5.163888888888889,"hoursUnknown":11.773888888888889,"entries":4,"exits":2},{"date":"2025-11-10","hoursInside":9.161388888888888,"hoursOutside":4.215277777777778,"hoursUnknown":10.623333333333333,"entries":3,"exits":3},{"date":"2025-11-11","hoursInside":9.665833333333333,"hoursOutside":3.7319444444444443,"hoursUnknown":10.602222222222222,"entries":3,"exits":2},{"date":"2025-11-12","hoursInside":7.995277777777778,"hoursOutside":3.1377777777777776,"hoursUnknown":12.866944444444444,"entries":3,"exits":1},{"date":"2025-11-13","hoursInside":19.413055555555555,"hoursOutside":4.586944444444445,"hoursUnknown":0,"entries":2,"exits":2},{"date":"2025-11-14","hoursInside":3.537777777777778,"hoursOutside":0.6513888888888889,"hoursUnknown":19.810833333333335,"entries":3,"exits":1},{"date":"2025-11-15","hoursInside":7.131944444444445,"hoursOutside":1.5402777777777779,"hoursUnknown":15.327777777777778,"entries":3,"exits":2},{"date":"2025-11-16","hoursInside":18.818055555555556,"hoursOutside":4.115277777777778,"hoursUnknown":1.0666666666666667,"entries":3,"exits":2},{"date":"2025-11-17","hoursInside":8.247777777777777,"hoursOutside":1.2125,"hoursUnknown":14.539722222222222,"entries":2,"exits":1},{"date":"2025-11-18","hoursInside":18.283055555555556,"hoursOutside":1.861388888888889,"hoursUnknown":3.8555555555555556,"entries":3,"exits":2},{"date":"2025-11-19","hoursInside":7.6802777777777775,"hoursOutside":1.4441666666666666,"hoursUnknown":14.875555555555556,"entries":3,"exits":2},{"date":"2025-11-20","hoursInside":21.758055555555554,"hoursOutside":1.5555555555555556,"hoursUnknown":0.6863888888888889,"entries":3,"exits":2},{"date":"2025-11-21","hoursInside":18.52861111111111,"hoursOutside":2.215,"hoursUnknown":3.256388888888889,"entries":5,"exits":4},{"date":"2025-11-22","hoursInside":16.7975,"hoursOutside":2.1719444444444447,"hoursUnknown":5.030555555555556,"entries":4,"exits":3},{"date":"2025-11-23","hoursInside":9.559444444444445,"hoursOutside":0.9969444444444444,"hoursUnknown":13.443611111111112,"entries":5,"exits":3},{"date":"2025-11-24","hoursInside":4.074722222222222,"hoursOutside":0,"hoursUnknown":19.92527777777778,"entries":2,"exits":0},{"date":"2025-11-25","hoursInside":1.5058333333333334,"hoursOutside":1.4297222222222221,"hoursUnknown":21.064444444444444,"entries":2,"exits":1},{"date":"2025-11-26","hoursInside":5.328611111111111,"hoursOutside":0,"hoursUnknown":18.671388888888888,"entries":1,"exits":0},{"date":"2025-11-27","hoursInside":3.3963888888888887,"hoursOutside":1.3116666666666668,"hoursUnknown":19.291944444444443,"entries":2,"exits":1},{"date":"2025-11-28","hoursInside":6.188888888888889,"hoursOutside":3.3627777777777776,"hoursUnknown":14.448333333333332,"entries":3,"exits":2},{"date":"2025-11-29","hoursInside":15.455000000000002,"hoursOutside":4.154722222222222,"hoursUnknown":4.3902777777777775,"entries":3,"exits":2},{"date":"2025-11-30","hoursInside":5.651944444444444,"hoursOutside":1.6083333333333334,"hoursUnknown":16.73972222222222,"entries":4,"exits":0},{"date":"2025-12-01","hoursInside":6.405555555555555,"hoursOutside":2.6430555555555557,"hoursUnknown":14.95138888888889,"entries":2,"exits":1},{"date":"2025-12-02","hoursInside":1.7091666666666667,"hoursOutside":1.8727777777777779,"hoursUnknown":20.418055555555554,"entries":2,"exits":1},{"date":"2025-12-03","hoursInside":0,"hoursOutside":0,"hoursUnknown":24.000000000000004,"entries":2,"exits":0},{"date":"2025-12-04","hoursInside":0,"hoursOutside":0,"hoursUnknown":24,"entries":1,"exits":0},{"date":"2025-12-05","hoursInside":0,"hoursOutside":0,"hoursUnknown":24,"entries":1,"exits":0},{"date":"2025-12-06","hoursInside":0,"hoursOutside":0,"hoursUnknown":24,"entries":2,"exits":0},{"date":"2025-12-07","hoursInside":22.509444444444444,"hoursOutside":0.1611111111111111,"hoursUnknown":1.3294444444444444,"entries":4,"exits":2},{"date":"2025-12-08","hoursInside":17.96527777777778,"hoursOutside":6.034722222222222,"hoursUnknown":0,"entries":1,"exits":1},{"date":"2025-12-09","hoursInside":3.6455555555555557,"hoursOutside":15.123333333333333,"hoursUnknown":5.231111111111111,"entries":1,"exits":1},{"date":"2025-12-10","hoursInside":1.315,"hoursOutside":0,"hoursUnknown":22.685,"entries":2,"exits":0},{"date":"2025-12-11","hoursInside":18.184166666666666,"hoursOutside":0.2897222222222222,"hoursUnknown":5.526111111111111,"entries":1,"exits":1},{"date":"2025-12-12","hoursInside":3.3269444444444445,"hoursOutside":0,"hoursUnknown":20.673055555555553,"entries":2,"exits":0},{"date":"2025-12-13","hoursInside":24,"hoursOutside":0,"hoursUnknown":0,"entries":0,"exits":0},{"date":"2025-12-14","hoursInside":8.524444444444445,"hoursOutside":0.5611111111111111,"hoursUnknown":14.914444444444445,"entries":1,"exits":1},{"date":"2025-12-15","hoursInside":4.603055555555556,"hoursOutside":0,"hoursUnknown":19.396944444444443,"entries":1,"exits":0},{"date":"2025-12-16","hoursInside":24,"hoursOutside":0,"hoursUnknown":0,"entries":0,"exits":0},{"date":"2025-12-17","hoursInside":5.807777777777778,"hoursOutside":0.9683333333333334,"hoursUnknown":17.22388888888889,"entries":1,"exits":1},{"date":"2025-12-18","hoursInside":0,"hoursOutside":0,"hoursUnknown":24,"entries":1,"exits":0},{"date":"2025-12-19","hoursInside":0,"hoursOutside":0,"hoursUnknown":24,"entries":0,"exits":0},{"date":"2025-12-20","hoursInside":16.1175,"hoursOutside":0.8411111111111111,"hoursUnknown":7.041388888888889,"entries":3,"exits":2},{"date":"2025-12-21","hoursInside":7.6275,"hoursOutside":0,"hoursUnknown":16.3725,"entries":2,"exits":0},{"date":"2025-12-22","hoursInside":1.3363888888888888,"hoursOutside":0.29444444444444445,"hoursUnknown":22.36916666666667,"entries":3,"exits":1},{"date":"2025-12-23","hoursInside":7.810555555555555,"hoursOutside":0,"hoursUnknown":16.189444444444444,"entries":2,"exits":0},{"date":"2025-12-24","hoursInside":11.7775,"hoursOutside":12.2225,"hoursUnknown":0,"entries":0,"exits":1},{"date":"2025-12-25","hoursInside":22.404166666666665,"hoursOutside":1.5958333333333334,"hoursUnknown":0,"entries":1,"exits":0},{"date":"2025-12-26","hoursInside":5.302777777777778,"hoursOutside":0.5022222222222222,"hoursUnknown":18.195,"entries":1,"exits":1},{"date":"2025-12-27","hoursInside":0,"hoursOutside":0,"hoursUnknown":24,"entries":2,"exits":0},{"date":"2025-12-28","hoursInside":0,"hoursOutside":0,"hoursUnknown":24,"entries":1,"exits":0},{"date":"2025-12-29","hoursInside":0,"hoursOutside":0,"hoursUnknown":24,"entries":1,"exits":0},{"date":"2025-12-30","hoursInside":10.709444444444445,"hoursOutside":0,"hoursUnknown":13.290555555555555,"entries":2,"exits":0},{"date":"2025-12-31","hoursInside":24,"hoursOutside":0,"hoursUnknown":0,"entries":0,"exits":0},{"date":"2026-01-01","hoursInside":10.403333333333334,"hoursOutside":0.6119444444444444,"hoursUnknown":12.984722222222222,"entries":1,"exits":1},{"date":"2026-01-02","hoursInside":0,"hoursOutside":0,"hoursUnknown":24,"entries":3,"exits":0},{"date":"2026-01-03","hoursInside":0,"hoursOutside":0,"hoursUnknown":24,"entries":1,"exits":0},{"date":"2026-01-04","hoursInside":2.266111111111111,"hoursOutside":1.4522222222222223,"hoursUnknown":20.281666666666666,"entries":3,"exits":1},{"date":"2026-01-05","hoursInside":0,"hoursOutside":0,"hoursUnknown":24,"entries":1,"exits":0},{"date":"2026-01-06","hoursInside":9.398333333333333,"hoursOutside":0,"hoursUnknown":14.601666666666667,"entries":2,"exits":0},{"date":"2026-01-07","hoursInside":4.6322222222222225,"hoursOutside":0.8230555555555555,"hoursUnknown":18.544722222222223,"entries":1,"exits":1},{"date":"2026-01-08","hoursInside":0,"hoursOutside":0,"hoursUnknown":24,"entries":1,"exits":0},{"date":"2026-01-09","hoursInside":0,"hoursOutside":0,"hoursUnknown":24,"entries":3,"exits":0},{"date":"2026-01-10","hoursInside":0,"hoursOutside":0,"hoursUnknown":24,"entries":1,"exits":0},{"date":"2026-01-11","hoursInside":8.9925,"hoursOutside":0,"hoursUnknown":15.0075,"entries":2,"exits":0},{"date":"2026-01-12","hoursInside":23.5075,"hoursOutside":0.4925,"hoursUnknown":0,"entries":2,"exits":2},{"date":"2026-01-13","hoursInside":23.676944444444445,"hoursOutside":0.32305555555555554,"hoursUnknown":0,"entries":1,"exits":1},{"date":"2026-01-14","hoursInside":12.81638888888889,"hoursOutside":0.16944444444444445,"hoursUnknown":11.014166666666666,"entries":1,"exits":1},{"date":"2026-01-15","hoursInside":0,"hoursOutside":0,"hoursUnknown":24,"entries":1,"exits":0},{"date":"2026-01-16","hoursInside":0,"hoursOutside":0,"hoursUnknown":24,"entries":0,"exits":0},{"date":"2026-01-17","hoursInside":0,"hoursOutside":0,"hoursUnknown":24,"entries":0,"exits":0},{"date":"2026-01-18","hoursInside":0,"hoursOutside":0,"hoursUnknown":24,"entries":0,"exits":0},{"date":"2026-01-19","hoursInside":0,"hoursOutside":0,"hoursUnknown":24,"entries":0,"exits":0},{"date":"2026-01-20","hoursInside":0,"hoursOutside":0,"hoursUnknown":24,"entries":0,"exits":0},{"date":"2026-01-21","hoursInside":0,"hoursOutside":0,"hoursUnknown":24,"entries":0,"exits":0},{"date":"2026-01-22","hoursInside":0,"hoursOutside":0,"hoursUnknown":24,"entries":0,"exits":0},{"date":"2026-01-23","hoursInside":0,"hoursOutside":0,"hoursUnknown":24,"entries":0,"exits":0},{"date":"2026-01-24","hoursInside":0,"hoursOutside":0,"hoursUnknown":24,"entries":0,"exits":0},{"date":"2026-01-25","hoursInside":0,"hoursOutside":0,"hoursUnknown":24,"entries":0,"exits":0},{"date":"2026-01-26","hoursInside":0,"hoursOutside":0,"hoursUnknown":24,"entries":0,"exits":0},{"date":"2026-01-27","hoursInside":0,"hoursOutside":0,"hoursUnknown":24,"entries":0,"exits":0},{"date":"2026-01-28","hoursInside":0,"hoursOutside":0,"hoursUnknown":24,"entries":0,"exits":0},{"date":"2026-01-29","hoursInside":0,"hoursOutside":0,"hoursUnknown":24,"entries":0,"exits":0},{"date":"2026-01-30","hoursInside":0,"hoursOutside":0,"hoursUnknown":24,"entries":0,"exits":0},{"date":"2026-01-31","hoursInside":0,"hoursOutside":0,"hoursUnknown":24,"entries":0,"exits":0},{"date":"2026-02-01","hoursInside":0,"hoursOutside":0,"hoursUnknown":24,"entries":0,"exits":0}];
+    const hourlyDistribution = [{"hour":0,"entries":115,"exits":117},{"hour":1,"entries":117,"exits":126},{"hour":2,"entries":120,"exits":143},{"hour":3,"entries":183,"exits":152},{"hour":4,"entries":226,"exits":159},{"hour":5,"entries":203,"exits":139},{"hour":6,"entries":153,"exits":124},{"hour":7,"entries":147,"exits":90},{"hour":8,"entries":97,"exits":75},{"hour":9,"entries":62,"exits":96},{"hour":10,"entries":78,"exits":95},{"hour":11,"entries":90,"exits":101},{"hour":12,"entries":110,"exits":111},{"hour":13,"entries":100,"exits":106},{"hour":14,"entries":99,"exits":93},{"hour":15,"entries":114,"exits":114},{"hour":16,"entries":124,"exits":100},{"hour":17,"entries":83,"exits":137},{"hour":18,"entries":108,"exits":203},{"hour":19,"entries":101,"exits":143},{"hour":20,"entries":100,"exits":127},{"hour":21,"entries":107,"exits":77},{"hour":22,"entries":103,"exits":88},{"hour":23,"entries":101,"exits":98}];
+    const hourlyPresence = [{"hour":0,"hoursInside":555.8841666666667,"hoursOutside":467.54333333333335,"hoursUnknown":1314.4372222222214},{"hour":1,"hoursInside":552.0158333333334,"hoursOutside":481.0811111111112,"hoursUnknown":1302.9347222222225},{"hour":2,"hoursInside":535.5783333333333,"hoursOutside":500.2113888888889,"hoursUnknown":1290.8605555555555},{"hour":3,"hoursInside":557.1897222222221,"hoursOutside":483.37750000000005,"hoursUnknown":1292.332777777778},{"hour":4,"hoursInside":584.024722222222,"hoursOutside":432.22111111111116,"hoursUnknown":1326.7183333333332},{"hour":5,"hoursInside":612.8955555555555,"hoursOutside":360.5044444444445,"hoursUnknown":1376.2658333333336},{"hour":6,"hoursInside":631.3888888888887,"hoursOutside":294.240277777778,"hoursUnknown":1413.2736111111112},{"hour":7,"hoursInside":670.0230555555555,"hoursOutside":253.7913888888889,"hoursUnknown":1419.6369444444445},{"hour":8,"hoursInside":664.9152777777773,"hoursOutside":238.86777777777786,"hoursUnknown":1433.7422222222222},{"hour":9,"hoursInside":633.8494444444447,"hoursOutside":263.59250000000003,"hoursUnknown":1437.3958333333337},{"hour":10,"hoursInside":609.1024999999998,"hoursOutside":278.6394444444444,"hoursUnknown":1449.3500000000001},{"hour":11,"hoursInside":583.245,"hoursOutside":305.17944444444447,"hoursUnknown":1440.9736111111108},{"hour":12,"hoursInside":580.8075000000001,"hoursOutside":320.0224999999999,"hoursUnknown":1435.7797222222223},{"hour":13,"hoursInside":570.2652777777778,"hoursOutside":330.4025,"hoursUnknown":1430.591111111111},{"hour":14,"hoursInside":561.6502777777778,"hoursOutside":332.9191666666666,"hoursUnknown":1434.1299999999992},{"hour":15,"hoursInside":542.2849999999997,"hoursOutside":345.01777777777784,"hoursUnknown":1444.1430555555555},{"hour":16,"hoursInside":541.5438888888888,"hoursOutside":349.2036111111112,"hoursUnknown":1447.0872222222226},{"hour":17,"hoursInside":496.5866666666668,"hoursOutside":365.2983333333333,"hoursUnknown":1457.4144444444448},{"hour":18,"hoursInside":463.5805555555557,"hoursOutside":424.02444444444455,"hoursUnknown":1460.2975},{"hour":19,"hoursInside":445.92805555555555,"hoursOutside":449.4024999999999,"hoursUnknown":1441.0930555555553},{"hour":20,"hoursInside":441.52916666666664,"hoursOutside":461.89083333333343,"hoursUnknown":1438.7891666666674},{"hour":21,"hoursInside":469.10749999999996,"hoursOutside":450.4274999999999,"hoursUnknown":1414.9152777777779},{"hour":22,"hoursInside":507.5872222222222,"hoursOutside":441.91055555555533,"hoursUnknown":1378.569444444445},{"hour":23,"hoursInside":534.1847222222223,"hoursOutside":443.6561111111112,"hoursUnknown":1347.1391666666664}];
+    const monthlyPreyCount = [{"month":"2019-08","preyCount":1},{"month":"2019-09","preyCount":2},{"month":"2019-10","preyCount":5},{"month":"2019-11","preyCount":7},{"month":"2019-12","preyCount":10},{"month":"2020-01","preyCount":6},{"month":"2020-02","preyCount":5},{"month":"2020-03","preyCount":11},{"month":"2020-04","preyCount":1},{"month":"2020-05","preyCount":2},{"month":"2020-06","preyCount":1},{"month":"2020-07","preyCount":0},{"month":"2020-08","preyCount":0},{"month":"2020-09","preyCount":0},{"month":"2020-10","preyCount":0},{"month":"2020-11","preyCount":0},{"month":"2020-12","preyCount":0},{"month":"2021-01","preyCount":0},{"month":"2021-02","preyCount":0},{"month":"2021-03","preyCount":0},{"month":"2021-04","preyCount":0},{"month":"2021-05","preyCount":0},{"month":"2021-06","preyCount":0},{"month":"2021-07","preyCount":0},{"month":"2021-08","preyCount":0},{"month":"2021-09","preyCount":0},{"month":"2021-10","preyCount":0},{"month":"2021-11","preyCount":0},{"month":"2021-12","preyCount":2},{"month":"2022-01","preyCount":2},{"month":"2022-02","preyCount":0},{"month":"2022-03","preyCount":4},{"month":"2022-04","preyCount":1},{"month":"2022-05","preyCount":0},{"month":"2022-06","preyCount":0},{"month":"2022-07","preyCount":0},{"month":"2022-08","preyCount":0},{"month":"2022-09","preyCount":0},{"month":"2022-10","preyCount":1},{"month":"2022-11","preyCount":0},{"month":"2022-12","preyCount":1},{"month":"2023-01","preyCount":0},{"month":"2023-02","preyCount":1},{"month":"2023-03","preyCount":1},{"month":"2023-04","preyCount":3},{"month":"2023-05","preyCount":5},{"month":"2023-06","preyCount":2},{"month":"2023-07","preyCount":1},{"month":"2023-08","preyCount":1},{"month":"2023-09","preyCount":1},{"month":"2023-10","preyCount":1},{"month":"2023-11","preyCount":1},{"month":"2023-12","preyCount":1},{"month":"2024-01","preyCount":0},{"month":"2024-02","preyCount":0},{"month":"2024-03","preyCount":1},{"month":"2024-04","preyCount":0},{"month":"2024-05","preyCount":2},{"month":"2024-06","preyCount":1},{"month":"2024-07","preyCount":1},{"month":"2024-08","preyCount":1},{"month":"2024-09","preyCount":0},{"month":"2024-10","preyCount":0},{"month":"2024-11","preyCount":1},{"month":"2024-12","preyCount":0},{"month":"2025-01","preyCount":0},{"month":"2025-02","preyCount":0},{"month":"2025-03","preyCount":0},{"month":"2025-04","preyCount":1},{"month":"2025-05","preyCount":0},{"month":"2025-06","preyCount":0},{"month":"2025-07","preyCount":0},{"month":"2025-08","preyCount":0},{"month":"2025-09","preyCount":0},{"month":"2025-10","preyCount":0},{"month":"2025-11","preyCount":0},{"month":"2025-12","preyCount":1},{"month":"2026-01","preyCount":0},{"month":"2026-02","preyCount":0}];
+    const monthlyPresence = [{"month":1,"hoursInside":1589.6397222222222,"hoursOutside":469.76250000000033,"hoursUnknown":2754.3652777777797},{"month":2,"hoursInside":1210.587499999999,"hoursOutside":643.3002777777779,"hoursUnknown":2226.112222222221},{"month":3,"hoursInside":1236.3963888888889,"hoursOutside":999.1152777777779,"hoursUnknown":2228.4883333333332},{"month":4,"hoursInside":815.0619444444442,"hoursOutside":1087.0669444444443,"hoursUnknown":2417.8711111111106},{"month":5,"hoursInside":1242.4002777777787,"hoursOutside":839.0997222222221,"hoursUnknown":2382.499999999999},{"month":6,"hoursInside":684.9849999999999,"hoursOutside":914.0241666666665,"hoursUnknown":2720.9908333333356},{"month":7,"hoursInside":584.3127777777776,"hoursOutside":712.1369444444445,"hoursUnknown":3167.5502777777783},{"month":8,"hoursInside":741.2494444444445,"hoursOutside":929.6727777777784,"hoursUnknown":2953.774999999999},{"month":9,"hoursInside":850.6183333333331,"hoursOutside":603.0230555555554,"hoursUnknown":3586.35861111111},{"month":10,"hoursInside":1393.7100000000003,"hoursOutside":694.5177777777784,"hoursUnknown":3119.7722222222237},{"month":11,"hoursInside":1547.8950000000002,"hoursOutside":679.3930555555555,"hoursUnknown":2812.7119444444465},{"month":12,"hoursInside":1448.3119444444444,"hoursOutside":502.3130555555553,"hoursUnknown":3257.374999999999}];
+    const monthlyTimeSeries = [{"month":"2019-08","hoursInside":18.13861111111111,"hoursOutside":4.596666666666667,"hoursUnknown":721.2647222222223},{"month":"2019-09","hoursInside":47.96111111111111,"hoursOutside":85.43555555555557,"hoursUnknown":586.6033333333335},{"month":"2019-10","hoursInside":208.33111111111108,"hoursOutside":167.45888888888894,"hoursUnknown":368.21000000000004},{"month":"2019-11","hoursInside":250.13444444444445,"hoursOutside":176.30222222222227,"hoursUnknown":293.56333333333333},{"month":"2019-12","hoursInside":222.70555555555552,"hoursOutside":168.24055555555555,"hoursUnknown":353.0538888888889},{"month":"2020-01","hoursInside":233.76749999999996,"hoursOutside":123.59277777777774,"hoursUnknown":386.63972222222236},{"month":"2020-02","hoursInside":128.39083333333332,"hoursOutside":276.11,"hoursUnknown":291.4991666666666},{"month":"2020-03","hoursInside":165.19666666666666,"hoursOutside":313.79249999999996,"hoursUnknown":265.0108333333333},{"month":"2020-04","hoursInside":98.71638888888889,"hoursOutside":542.03,"hoursUnknown":79.25361111111113},{"month":"2020-05","hoursInside":445.2247222222222,"hoursOutside":229.7386111111111,"hoursUnknown":69.03666666666666},{"month":"2020-06","hoursInside":0,"hoursOutside":281.6222222222222,"hoursUnknown":438.3777777777778},{"month":"2020-07","hoursInside":0,"hoursOutside":0,"hoursUnknown":744},{"month":"2020-08","hoursInside":0,"hoursOutside":0,"hoursUnknown":744},{"month":"2020-09","hoursInside":0,"hoursOutside":0,"hoursUnknown":720},{"month":"2020-10","hoursInside":0,"hoursOutside":0,"hoursUnknown":744},{"month":"2020-11","hoursInside":0,"hoursOutside":0,"hoursUnknown":720},{"month":"2020-12","hoursInside":0,"hoursOutside":0,"hoursUnknown":744},{"month":"2021-01","hoursInside":0,"hoursOutside":0,"hoursUnknown":744},{"month":"2021-02","hoursInside":0,"hoursOutside":0,"hoursUnknown":672},{"month":"2021-03","hoursInside":0,"hoursOutside":0,"hoursUnknown":744},{"month":"2021-04","hoursInside":0,"hoursOutside":0,"hoursUnknown":720},{"month":"2021-05","hoursInside":0,"hoursOutside":0,"hoursUnknown":744},{"month":"2021-06","hoursInside":0,"hoursOutside":0,"hoursUnknown":720},{"month":"2021-07","hoursInside":0,"hoursOutside":0,"hoursUnknown":744},{"month":"2021-08","hoursInside":0,"hoursOutside":0,"hoursUnknown":744},{"month":"2021-09","hoursInside":0,"hoursOutside":0,"hoursUnknown":720},{"month":"2021-10","hoursInside":0,"hoursOutside":0,"hoursUnknown":744},{"month":"2021-11","hoursInside":102.77583333333334,"hoursOutside":80.33277777777778,"hoursUnknown":536.8913888888889},{"month":"2021-12","hoursInside":68.54,"hoursOutside":54.67305555555555,"hoursUnknown":620.7869444444445},{"month":"2022-01","hoursInside":200.505,"hoursOutside":91.36361111111111,"hoursUnknown":452.1313888888889},{"month":"2022-02","hoursInside":159.5038888888889,"hoursOutside":91.16333333333334,"hoursUnknown":421.3327777777778},{"month":"2022-03","hoursInside":123.67083333333335,"hoursOutside":177.78000000000003,"hoursUnknown":442.5491666666667},{"month":"2022-04","hoursInside":34.92527777777777,"hoursOutside":37.87222222222222,"hoursUnknown":647.2025},{"month":"2022-05","hoursInside":3.8422222222222224,"hoursOutside":3.8519444444444444,"hoursUnknown":736.3058333333333},{"month":"2022-06","hoursInside":20.64388888888889,"hoursOutside":66.38277777777778,"hoursUnknown":632.9733333333334},{"month":"2022-07","hoursInside":0,"hoursOutside":0,"hoursUnknown":744},{"month":"2022-08","hoursInside":32.0975,"hoursOutside":216.99138888888888,"hoursUnknown":494.9111111111111},{"month":"2022-09","hoursInside":24.775277777777777,"hoursOutside":37.877222222222215,"hoursUnknown":657.3475000000001},{"month":"2022-10","hoursInside":109.32527777777777,"hoursOutside":84.68222222222221,"hoursUnknown":549.9925},{"month":"2022-11","hoursInside":210.24694444444447,"hoursOutside":108.5552777777778,"hoursUnknown":401.19777777777773},{"month":"2022-12","hoursInside":253.17055555555555,"hoursOutside":75.55166666666666,"hoursUnknown":415.27777777777777},{"month":"2023-01","hoursInside":342.1455555555556,"hoursOutside":112.97444444444446,"hoursUnknown":288.88},{"month":"2023-02","hoursInside":318.10388888888895,"hoursOutside":121.38555555555554,"hoursUnknown":232.51055555555558},{"month":"2023-03","hoursInside":279.50999999999993,"hoursOutside":155.44388888888892,"hoursUnknown":309.0461111111112},{"month":"2023-04","hoursInside":203.9852777777778,"hoursOutside":116.14277777777777,"hoursUnknown":399.87194444444447},{"month":"2023-05","hoursInside":278.03916666666663,"hoursOutside":166.00444444444452,"hoursUnknown":299.9563888888889},{"month":"2023-06","hoursInside":182.61111111111111,"hoursOutside":173.755,"hoursUnknown":363.6338888888889},{"month":"2023-07","hoursInside":138.30305555555555,"hoursOutside":212.61666666666662,"hoursUnknown":393.0802777777777},{"month":"2023-08","hoursInside":244.26111111111112,"hoursOutside":281.16611111111104,"hoursUnknown":218.57277777777773},{"month":"2023-09","hoursInside":226.73694444444442,"hoursOutside":175.49055555555557,"hoursUnknown":317.77249999999987},{"month":"2023-10","hoursInside":285.31666666666666,"hoursOutside":167.27250000000004,"hoursUnknown":291.4108333333333},{"month":"2023-11","hoursInside":349.5777777777777,"hoursOutside":145.2038888888889,"hoursUnknown":225.21833333333333},{"month":"2023-12","hoursInside":302.0530555555556,"hoursOutside":89.31777777777779,"hoursUnknown":352.62916666666666},{"month":"2024-01","hoursInside":296.08722222222224,"hoursOutside":72.27333333333333,"hoursUnknown":375.6394444444444},{"month":"2024-02","hoursInside":301.6716666666666,"hoursOutside":67.49333333333333,"hoursUnknown":326.83500000000004},{"month":"2024-03","hoursInside":352.49388888888893,"hoursOutside":143.56861111111112,"hoursUnknown":247.9375},{"month":"2024-04","hoursInside":277.18694444444446,"hoursOutside":113.5438888888889,"hoursUnknown":329.26916666666665},{"month":"2024-05","hoursInside":301.46194444444444,"hoursOutside":181.4002777777778,"hoursUnknown":261.1377777777777},{"month":"2024-06","hoursInside":253.1644444444444,"hoursOutside":135.7202777777778,"hoursUnknown":331.11527777777775},{"month":"2024-07","hoursInside":230.06416666666667,"hoursOutside":188.4933333333333,"hoursUnknown":325.4425000000001},{"month":"2024-08","hoursInside":173.00250000000003,"hoursOutside":187.45499999999998,"hoursUnknown":383.5425000000001},{"month":"2024-09","hoursInside":231.75333333333336,"hoursOutside":134.75555555555553,"hoursUnknown":353.49111111111114},{"month":"2024-10","hoursInside":372.4413888888889,"hoursOutside":166.26777777777778,"hoursUnknown":205.29083333333335},{"month":"2024-11","hoursInside":317.28805555555556,"hoursOutside":100.08749999999999,"hoursUnknown":302.62444444444446},{"month":"2024-12","hoursInside":352.7605555555556,"hoursOutside":71.41972222222222,"hoursUnknown":319.8197222222222},{"month":"2025-01","hoursInside":421.4411111111111,"hoursOutside":65.6861111111111,"hoursUnknown":256.87277777777774},{"month":"2025-02","hoursInside":302.91722222222216,"hoursOutside":87.14805555555554,"hoursUnknown":281.93472222222226},{"month":"2025-03","hoursInside":315.52500000000003,"hoursOutside":208.5302777777777,"hoursUnknown":219.9447222222222},{"month":"2025-04","hoursInside":200.24805555555557,"hoursOutside":277.47805555555556,"hoursUnknown":242.27388888888885},{"month":"2025-05","hoursInside":213.83222222222224,"hoursOutside":258.1044444444445,"hoursUnknown":272.0633333333334},{"month":"2025-06","hoursInside":228.56555555555556,"hoursOutside":256.5438888888889,"hoursUnknown":234.89055555555555},{"month":"2025-07","hoursInside":215.94555555555556,"hoursOutside":311.0269444444444,"hoursUnknown":217.02749999999997},{"month":"2025-08","hoursInside":273.7497222222222,"hoursOutside":239.46361111111113,"hoursUnknown":230.7866666666667},{"month":"2025-09","hoursInside":319.39166666666665,"hoursOutside":169.4641666666667,"hoursUnknown":231.14416666666668},{"month":"2025-10","hoursInside":418.29555555555555,"hoursOutside":108.8363888888889,"hoursUnknown":216.86805555555557},{"month":"2025-11","hoursInside":317.87194444444447,"hoursOutside":68.91138888888888,"hoursUnknown":333.2166666666667},{"month":"2025-12","hoursInside":249.08222222222224,"hoursOutside":43.110277777777775,"hoursUnknown":451.8075},{"month":"2026-01","hoursInside":95.69333333333333,"hoursOutside":3.8722222222222222,"hoursUnknown":644.4344444444444},{"month":"2026-02","hoursInside":0,"hoursOutside":0,"hoursUnknown":24}];
+    const monthlyActivity = [{"month":"2019-08","entries":2,"exits":7},{"month":"2019-09","entries":18,"exits":42},{"month":"2019-10","entries":36,"exits":51},{"month":"2019-11","entries":52,"exits":77},{"month":"2019-12","entries":52,"exits":64},{"month":"2020-01","entries":62,"exits":59},{"month":"2020-02","entries":39,"exits":36},{"month":"2020-03","entries":11,"exits":7},{"month":"2020-04","entries":3,"exits":6},{"month":"2020-05","entries":2,"exits":3},{"month":"2020-06","entries":1,"exits":0},{"month":"2020-07","entries":0,"exits":0},{"month":"2020-08","entries":0,"exits":0},{"month":"2020-09","entries":0,"exits":0},{"month":"2020-10","entries":0,"exits":0},{"month":"2020-11","entries":0,"exits":0},{"month":"2020-12","entries":0,"exits":0},{"month":"2021-01","entries":0,"exits":0},{"month":"2021-02","entries":0,"exits":0},{"month":"2021-03","entries":0,"exits":0},{"month":"2021-04","entries":0,"exits":0},{"month":"2021-05","entries":0,"exits":0},{"month":"2021-06","entries":0,"exits":0},{"month":"2021-07","entries":0,"exits":0},{"month":"2021-08","entries":0,"exits":0},{"month":"2021-09","entries":0,"exits":0},{"month":"2021-10","entries":0,"exits":0},{"month":"2021-11","entries":28,"exits":60},{"month":"2021-12","entries":7,"exits":47},{"month":"2022-01","entries":24,"exits":61},{"month":"2022-02","entries":17,"exits":52},{"month":"2022-03","entries":21,"exits":68},{"month":"2022-04","entries":8,"exits":74},{"month":"2022-05","entries":1,"exits":45},{"month":"2022-06","entries":3,"exits":35},{"month":"2022-07","entries":0,"exits":35},{"month":"2022-08","entries":11,"exits":31},{"month":"2022-09","entries":8,"exits":57},{"month":"2022-10","entries":10,"exits":64},{"month":"2022-11","entries":27,"exits":38},{"month":"2022-12","entries":57,"exits":40},{"month":"2023-01","entries":54,"exits":38},{"month":"2023-02","entries":42,"exits":27},{"month":"2023-03","entries":53,"exits":46},{"month":"2023-04","entries":44,"exits":46},{"month":"2023-05","entries":56,"exits":43},{"month":"2023-06","entries":56,"exits":33},{"month":"2023-07","entries":41,"exits":25},{"month":"2023-08","entries":49,"exits":45},{"month":"2023-09","entries":31,"exits":55},{"month":"2023-10","entries":69,"exits":68},{"month":"2023-11","entries":90,"exits":84},{"month":"2023-12","entries":59,"exits":39},{"month":"2024-01","entries":83,"exits":46},{"month":"2024-02","entries":55,"exits":40},{"month":"2024-03","entries":71,"exits":53},{"month":"2024-04","entries":74,"exits":48},{"month":"2024-05","entries":59,"exits":55},{"month":"2024-06","entries":50,"exits":41},{"month":"2024-07","entries":50,"exits":41},{"month":"2024-08","entries":48,"exits":32},{"month":"2024-09","entries":64,"exits":39},{"month":"2024-10","entries":81,"exits":68},{"month":"2024-11","entries":73,"exits":53},{"month":"2024-12","entries":77,"exits":49},{"month":"2025-01","entries":75,"exits":47},{"month":"2025-02","entries":75,"exits":43},{"month":"2025-03","entries":79,"exits":58},{"month":"2025-04","entries":76,"exits":66},{"month":"2025-05","entries":82,"exits":57},{"month":"2025-06","entries":37,"exits":26},{"month":"2025-07","entries":46,"exits":42},{"month":"2025-08","entries":81,"exits":68},{"month":"2025-09","entries":101,"exits":82},{"month":"2025-10","entries":104,"exits":74},{"month":"2025-11","entries":89,"exits":57},{"month":"2025-12","entries":43,"exits":14},{"month":"2026-01","entries":24,"exits":7},{"month":"2026-02","entries":0,"exits":0}];
+
+    // Daily chart - stacked bar chart
+    new Chart(document.getElementById('dailyChart'), {
+      type: 'bar',
+      data: {
+        labels: dailyStats.map(d => d.date),
+        datasets: [
+          {
+            label: 'Drinnen',
+            data: dailyStats.map(d => d.hoursInside.toFixed(1)),
+            backgroundColor: 'rgba(39, 174, 96, 0.7)',
+            borderColor: 'rgba(39, 174, 96, 1)',
+            borderWidth: 1
+          },
+          {
+            label: 'Unbekannt',
+            data: dailyStats.map(d => d.hoursUnknown.toFixed(1)),
+            backgroundColor: 'rgba(149, 165, 166, 0.7)',
+            borderColor: 'rgba(149, 165, 166, 1)',
+            borderWidth: 1
+          },
+          {
+            label: 'Draußen',
+            data: dailyStats.map(d => d.hoursOutside.toFixed(1)),
+            backgroundColor: 'rgba(231, 76, 60, 0.7)',
+            borderColor: 'rgba(231, 76, 60, 1)',
+            borderWidth: 1
+          }
+        ]
+      },
+      options: {
+        responsive: true,
+        scales: {
+          x: {
+            stacked: true
+          },
+          y: {
+            stacked: true,
+            beginAtZero: true,
+            max: 24,
+            title: { display: true, text: 'Stunden' }
+          }
+        }
+      }
+    });
+
+    // Hourly activity chart (count of events)
+    new Chart(document.getElementById('hourlyActivityChart'), {
+      type: 'bar',
+      data: {
+        labels: hourlyDistribution.map(h => h.hour + ':00'),
+        datasets: [
+          {
+            label: 'Eintritte',
+            data: hourlyDistribution.map(h => h.entries),
+            backgroundColor: 'rgba(39, 174, 96, 0.7)',
+            borderColor: 'rgba(39, 174, 96, 1)',
+            borderWidth: 1
+          },
+          {
+            label: 'Austritte',
+            data: hourlyDistribution.map(h => h.exits),
+            backgroundColor: 'rgba(231, 76, 60, 0.7)',
+            borderColor: 'rgba(231, 76, 60, 1)',
+            borderWidth: 1
+          }
+        ]
+      },
+      options: {
+        responsive: true,
+        scales: {
+          y: {
+            beginAtZero: true,
+            title: { display: true, text: 'Anzahl' }
+          }
+        }
+      }
+    });
+
+    // Hourly presence chart (percentage)
+    const hourlyPresenceData = hourlyPresence.map(h => {
+      const total = h.hoursInside + h.hoursOutside + h.hoursUnknown;
+      return {
+        hour: h.hour,
+        insidePercent: total > 0 ? (h.hoursInside / total * 100) : 0,
+        unknownPercent: total > 0 ? (h.hoursUnknown / total * 100) : 0,
+        outsidePercent: total > 0 ? (h.hoursOutside / total * 100) : 0
+      };
+    });
+
+    new Chart(document.getElementById('hourlyPresenceChart'), {
+      type: 'bar',
+      data: {
+        labels: hourlyPresenceData.map(h => h.hour + ':00'),
+        datasets: [
+          {
+            label: 'Drinnen %',
+            data: hourlyPresenceData.map(h => h.insidePercent.toFixed(1)),
+            backgroundColor: 'rgba(39, 174, 96, 0.7)',
+            borderColor: 'rgba(39, 174, 96, 1)',
+            borderWidth: 1
+          },
+          {
+            label: 'Unbekannt %',
+            data: hourlyPresenceData.map(h => h.unknownPercent.toFixed(1)),
+            backgroundColor: 'rgba(149, 165, 166, 0.7)',
+            borderColor: 'rgba(149, 165, 166, 1)',
+            borderWidth: 1
+          },
+          {
+            label: 'Draußen %',
+            data: hourlyPresenceData.map(h => h.outsidePercent.toFixed(1)),
+            backgroundColor: 'rgba(231, 76, 60, 0.7)',
+            borderColor: 'rgba(231, 76, 60, 1)',
+            borderWidth: 1
+          }
+        ]
+      },
+      options: {
+        responsive: true,
+        scales: {
+          x: {
+            stacked: true
+          },
+          y: {
+            stacked: true,
+            beginAtZero: true,
+            max: 100,
+            title: { display: true, text: 'Prozent' }
+          }
+        }
+      }
+    });
+
+    // Monthly presence chart (by month of year)
+    const monthNames = ['Jan', 'Feb', 'Mär', 'Apr', 'Mai', 'Jun', 'Jul', 'Aug', 'Sep', 'Okt', 'Nov', 'Dez'];
+    const monthlyPresenceData = monthlyPresence.map(m => {
+      const total = m.hoursInside + m.hoursOutside + m.hoursUnknown;
+      return {
+        month: m.month,
+        insidePercent: total > 0 ? (m.hoursInside / total * 100) : 0,
+        unknownPercent: total > 0 ? (m.hoursUnknown / total * 100) : 0,
+        outsidePercent: total > 0 ? (m.hoursOutside / total * 100) : 0
+      };
+    });
+
+    new Chart(document.getElementById('monthlyPresenceChart'), {
+      type: 'bar',
+      data: {
+        labels: monthlyPresenceData.map(m => monthNames[m.month - 1]),
+        datasets: [
+          {
+            label: 'Drinnen %',
+            data: monthlyPresenceData.map(m => m.insidePercent.toFixed(1)),
+            backgroundColor: 'rgba(39, 174, 96, 0.7)',
+            borderColor: 'rgba(39, 174, 96, 1)',
+            borderWidth: 1
+          },
+          {
+            label: 'Unbekannt %',
+            data: monthlyPresenceData.map(m => m.unknownPercent.toFixed(1)),
+            backgroundColor: 'rgba(149, 165, 166, 0.7)',
+            borderColor: 'rgba(149, 165, 166, 1)',
+            borderWidth: 1
+          },
+          {
+            label: 'Draußen %',
+            data: monthlyPresenceData.map(m => m.outsidePercent.toFixed(1)),
+            backgroundColor: 'rgba(231, 76, 60, 0.7)',
+            borderColor: 'rgba(231, 76, 60, 1)',
+            borderWidth: 1
+          }
+        ]
+      },
+      options: {
+        responsive: true,
+        scales: {
+          x: {
+            stacked: true
+          },
+          y: {
+            stacked: true,
+            beginAtZero: true,
+            max: 100,
+            title: { display: true, text: 'Prozent' }
+          }
+        }
+      }
+    });
+
+    // Monthly prey chart
+    new Chart(document.getElementById('monthlyPreyChart'), {
+      type: 'bar',
+      data: {
+        labels: monthlyPreyCount.map(m => m.month),
+        datasets: [
+          {
+            label: 'Beute',
+            data: monthlyPreyCount.map(m => m.preyCount),
+            backgroundColor: 'rgba(243, 156, 18, 0.7)',
+            borderColor: 'rgba(243, 156, 18, 1)',
+            borderWidth: 1
+          }
+        ]
+      },
+      options: {
+        responsive: true,
+        scales: {
+          y: {
+            beginAtZero: true,
+            title: { display: true, text: 'Anzahl' }
+          }
+        }
+      }
+    });
+
+    // Monthly time series chart (line chart)
+    new Chart(document.getElementById('monthlyTimeSeriesChart'), {
+      type: 'line',
+      data: {
+        labels: monthlyTimeSeries.map(m => m.month),
+        datasets: [
+          {
+            label: 'Drinnen',
+            data: monthlyTimeSeries.map(m => m.hoursInside.toFixed(1)),
+            backgroundColor: 'rgba(39, 174, 96, 0.2)',
+            borderColor: 'rgba(39, 174, 96, 1)',
+            borderWidth: 2,
+            fill: true
+          },
+          {
+            label: 'Unbekannt',
+            data: monthlyTimeSeries.map(m => m.hoursUnknown.toFixed(1)),
+            backgroundColor: 'rgba(149, 165, 166, 0.2)',
+            borderColor: 'rgba(149, 165, 166, 1)',
+            borderWidth: 2,
+            fill: true
+          },
+          {
+            label: 'Draußen',
+            data: monthlyTimeSeries.map(m => m.hoursOutside.toFixed(1)),
+            backgroundColor: 'rgba(231, 76, 60, 0.2)',
+            borderColor: 'rgba(231, 76, 60, 1)',
+            borderWidth: 2,
+            fill: true
+          }
+        ]
+      },
+      options: {
+        responsive: true,
+        scales: {
+          y: {
+            beginAtZero: true,
+            title: { display: true, text: 'Stunden' }
+          }
+        }
+      }
+    });
+
+    // Monthly activity chart (line chart)
+    new Chart(document.getElementById('monthlyActivityChart'), {
+      type: 'line',
+      data: {
+        labels: monthlyActivity.map(m => m.month),
+        datasets: [
+          {
+            label: 'Eintritte',
+            data: monthlyActivity.map(m => m.entries),
+            backgroundColor: 'rgba(39, 174, 96, 0.2)',
+            borderColor: 'rgba(39, 174, 96, 1)',
+            borderWidth: 2,
+            fill: false
+          },
+          {
+            label: 'Austritte',
+            data: monthlyActivity.map(m => m.exits),
+            backgroundColor: 'rgba(231, 76, 60, 0.2)',
+            borderColor: 'rgba(231, 76, 60, 1)',
+            borderWidth: 2,
+            fill: false
+          }
+        ]
+      },
+      options: {
+        responsive: true,
+        scales: {
+          y: {
+            beginAtZero: true,
+            title: { display: true, text: 'Anzahl' }
+          }
+        }
+      }
+    });
+  </script>
+</body>
+</html>

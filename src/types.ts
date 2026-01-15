@@ -1,9 +1,11 @@
 export interface PresenceEvent {
   id: string;
   timestamp: string;
-  direction: "in" | "out";
+  direction: "in" | "out" | "invalid";
   confidence: number;
+  prey?: boolean;
   imageFile?: string;
+  rawText?: string;
 }
 
 export interface Config {
@@ -16,8 +18,9 @@ export interface Config {
 }
 
 export interface OcrResult {
-  direction: "in" | "out" | null;
+  direction: "in" | "out" | "invalid";
   confidence: number;
+  prey: boolean;
   rawText: string;
 }
 
@@ -40,6 +43,11 @@ export interface ReportData {
   totalExits: number;
   dailyStats: DailyStat[];
   hourlyDistribution: HourlyStat[];
+  hourlyPresence: HourlyPresence[];
+  monthlyPreyCount: MonthlyStat[];
+  monthlyPresence: MonthlyPresence[];
+  monthlyTimeSeries: MonthlyTimeSeriesStat[];
+  monthlyActivity: MonthlyActivityStat[];
 }
 
 export interface DailyStat {
@@ -53,6 +61,38 @@ export interface DailyStat {
 
 export interface HourlyStat {
   hour: number;
+  entries: number;
+  exits: number;
+}
+
+export interface HourlyPresence {
+  hour: number;
+  hoursInside: number;
+  hoursOutside: number;
+  hoursUnknown: number;
+}
+
+export interface MonthlyStat {
+  month: string;
+  preyCount: number;
+}
+
+export interface MonthlyPresence {
+  month: number; // 1-12
+  hoursInside: number;
+  hoursOutside: number;
+  hoursUnknown: number;
+}
+
+export interface MonthlyTimeSeriesStat {
+  month: string; // YYYY-MM
+  hoursInside: number;
+  hoursOutside: number;
+  hoursUnknown: number;
+}
+
+export interface MonthlyActivityStat {
+  month: string; // YYYY-MM
   entries: number;
   exits: number;
 }

@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Greta Anwesenheitsbericht</title>
+  <title>Praesentia Gretae</title>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <style>
     * {
@@ -31,6 +31,27 @@
       text-align: center;
       color: #666;
       margin-bottom: 30px;
+    }
+    .info-box {
+      max-width: 800px;
+      margin: 0 auto 30px;
+      padding: 20px;
+      background: white;
+      border-radius: 10px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+      font-size: 0.9rem;
+      line-height: 1.8;
+    }
+    .info-box h3 {
+      margin-bottom: 15px;
+      color: #2c3e50;
+    }
+    .info-box ul {
+      margin-left: 20px;
+      margin-bottom: 15px;
+    }
+    .info-box p {
+      margin-bottom: 10px;
     }
     .stats-grid {
       display: grid;
@@ -113,6 +134,20 @@
       color: #e74c3c;
       font-weight: bold;
     }
+    .direction-invalid {
+      color: #95a5a6;
+      font-weight: bold;
+    }
+    .prey-indicator {
+      display: inline-block;
+      margin-left: 5px;
+      padding: 2px 6px;
+      background: #f39c12;
+      color: white;
+      border-radius: 3px;
+      font-size: 0.75rem;
+      font-weight: bold;
+    }
     .footer {
       text-align: center;
       margin-top: 30px;
@@ -123,8 +158,28 @@
 </head>
 <body>
   <div class="container">
-    <h1>Greta Anwesenheitsbericht</h1>
-    <p class="subtitle">{{startDate}} bis {{endDate}}</p>
+    <h1>Praesentia Gretae</h1>
+    <p class="subtitle">{{startDate}} bis {{endDate}} (Zeitzone: UTC+1)</p>
+
+    <div class="info-box">
+      <h3>Erkennungslogik</h3>
+      <p>Kamerabilder werden mit OCR analysiert. Die Ereignisse werden wie folgt klassifiziert:</p>
+      <ul>
+        <li><strong style="color: #e74c3c;">OUT:</strong> Bild enthält 4× "out - skipped prey detection"</li>
+        <li><strong style="color: #27ae60;">IN (ohne Beute):</strong> Bild enthält 4× "in - No prey detected"</li>
+        <li><strong style="color: #27ae60;">IN (mit Beute):</strong> Bild enthält mindestens 1× "in - Prey detected" <span class="prey-indicator">BEUTE</span></li>
+        <li><strong style="color: #95a5a6;">INVALID:</strong> Alle anderen Fälle (werden nicht für Anwesenheitsberechnung verwendet)</li>
+      </ul>
+
+      <h3 style="margin-top: 25px;">Anwesenheitsberechnung</h3>
+      <p>Die Anwesenheit wird basierend auf aufeinanderfolgenden gültigen Ereignissen berechnet:</p>
+      <ul>
+        <li><strong style="color: #27ae60;">Drinnen:</strong> Zeitraum zwischen "in" und "out" Ereignissen (auch über mehrere Tage hinweg)</li>
+        <li><strong style="color: #e74c3c;">Draußen:</strong> Zeitraum zwischen "out" und "in" Ereignissen (auch über mehrere Tage hinweg)</li>
+        <li><strong style="color: #95a5a6;">Unbekannt:</strong> Zeiträume zwischen gleichen Ereignissen ("in"→"in" oder "out"→"out"), sowie Zeiträume ohne aufgezeichnete Ereignisse</li>
+      </ul>
+      <p style="margin-top: 15px; color: #666; font-size: 0.85rem;">Jeder Tag wird auf genau 24 Stunden aufgefüllt. Fehlende Zeit wird als "Unbekannt" markiert. Ereignisse mit "invalid" werden in der Ereignistabelle angezeigt, aber nicht für die Anwesenheitsberechnung verwendet.</p>
+    </div>
 
     <div class="stats-grid">
       <div class="stat-card inside">
@@ -155,12 +210,37 @@
     </div>
 
     <div class="chart-container">
-      <h3 class="chart-title">Aktivität nach Tageszeit</h3>
-      <canvas id="hourlyChart"></canvas>
+      <h3 class="chart-title">Aktivität nach Tageszeit (Anzahl Ereignisse)</h3>
+      <canvas id="hourlyActivityChart"></canvas>
+    </div>
+
+    <div class="chart-container">
+      <h3 class="chart-title">Aufenthaltszeit nach Tageszeit (Prozent)</h3>
+      <canvas id="hourlyPresenceChart"></canvas>
+    </div>
+
+    <div class="chart-container">
+      <h3 class="chart-title">Aufenthaltszeit nach Monat im Jahr (Prozent)</h3>
+      <canvas id="monthlyPresenceChart"></canvas>
+    </div>
+
+    <div class="chart-container">
+      <h3 class="chart-title">Beutezählung pro Monat</h3>
+      <canvas id="monthlyPreyChart"></canvas>
+    </div>
+
+    <div class="chart-container">
+      <h3 class="chart-title">Aufenthaltszeit nach Monat</h3>
+      <canvas id="monthlyTimeSeriesChart"></canvas>
+    </div>
+
+    <div class="chart-container">
+      <h3 class="chart-title">Eintritte und Austritte nach Monat</h3>
+      <canvas id="monthlyActivityChart"></canvas>
     </div>
 
     <div class="events-table">
-      <h2>Letzte Ereignisse</h2>
+      <h2>Letzte 50 Ereignisse</h2>
       <table>
         <thead>
           <tr>
@@ -173,7 +253,10 @@
           {{#each events}}
           <tr>
             <td>{{this.timestamp}}</td>
-            <td class="direction-{{this.direction}}">{{this.direction}}</td>
+            <td class="direction-{{this.direction}}">
+              {{this.direction}}
+              {{#if this.prey}}<span class="prey-indicator">BEUTE</span>{{/if}}
+            </td>
             <td>{{this.confidence}}</td>
           </tr>
           {{/each}}
@@ -181,22 +264,17 @@
       </table>
     </div>
 
-    <div style="max-width: 800px; margin: 30px auto; padding: 20px; background: white; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); font-size: 0.9rem; line-height: 1.8;">
-      <h3 style="margin-bottom: 15px; color: #2c3e50;">Logik der Anwesenheitserkennung</h3>
-      <p style="margin-bottom: 10px;">Die Anwesenheit wird basierend auf aufeinanderfolgenden Ereignissen berechnet:</p>
-      <ul style="margin-left: 20px; margin-bottom: 10px;">
-        <li><strong style="color: #27ae60;">Drinnen:</strong> Zeitraum zwischen "in" und "out" Ereignissen (auch über mehrere Tage hinweg)</li>
-        <li><strong style="color: #e74c3c;">Draußen:</strong> Zeitraum zwischen "out" und "in" Ereignissen (auch über mehrere Tage hinweg)</li>
-        <li><strong style="color: #95a5a6;">Unbekannt:</strong> Zeiträume zwischen gleichen Ereignissen ("in"→"in" oder "out"→"out"), sowie Zeiträume ohne aufgezeichnete Ereignisse</li>
-      </ul>
-      <p style="margin-top: 15px; color: #666; font-size: 0.85rem;">Jeder Tag wird auf genau 24 Stunden aufgefüllt. Fehlende Zeit wird als "Unbekannt" markiert.</p>
-    </div>
     <p class="footer">Erstellt am {{generatedAt}}</p>
   </div>
 
   <script>
     const dailyStats = {{{dailyStatsJson}}};
     const hourlyDistribution = {{{hourlyDistributionJson}}};
+    const hourlyPresence = {{{hourlyPresenceJson}}};
+    const monthlyPreyCount = {{{monthlyPreyCountJson}}};
+    const monthlyPresence = {{{monthlyPresenceJson}}};
+    const monthlyTimeSeries = {{{monthlyTimeSeriesJson}}};
+    const monthlyActivity = {{{monthlyActivityJson}}};
 
     // Daily chart - stacked bar chart
     new Chart(document.getElementById('dailyChart'), {
@@ -236,14 +314,15 @@
           y: {
             stacked: true,
             beginAtZero: true,
+            max: 24,
             title: { display: true, text: 'Stunden' }
           }
         }
       }
     });
 
-    // Hourly chart
-    new Chart(document.getElementById('hourlyChart'), {
+    // Hourly activity chart (count of events)
+    new Chart(document.getElementById('hourlyActivityChart'), {
       type: 'bar',
       data: {
         labels: hourlyDistribution.map(h => h.hour + ':00'),
@@ -261,6 +340,221 @@
             backgroundColor: 'rgba(231, 76, 60, 0.7)',
             borderColor: 'rgba(231, 76, 60, 1)',
             borderWidth: 1
+          }
+        ]
+      },
+      options: {
+        responsive: true,
+        scales: {
+          y: {
+            beginAtZero: true,
+            title: { display: true, text: 'Anzahl' }
+          }
+        }
+      }
+    });
+
+    // Hourly presence chart (percentage)
+    const hourlyPresenceData = hourlyPresence.map(h => {
+      const total = h.hoursInside + h.hoursOutside + h.hoursUnknown;
+      return {
+        hour: h.hour,
+        insidePercent: total > 0 ? (h.hoursInside / total * 100) : 0,
+        unknownPercent: total > 0 ? (h.hoursUnknown / total * 100) : 0,
+        outsidePercent: total > 0 ? (h.hoursOutside / total * 100) : 0
+      };
+    });
+
+    new Chart(document.getElementById('hourlyPresenceChart'), {
+      type: 'bar',
+      data: {
+        labels: hourlyPresenceData.map(h => h.hour + ':00'),
+        datasets: [
+          {
+            label: 'Drinnen %',
+            data: hourlyPresenceData.map(h => h.insidePercent.toFixed(1)),
+            backgroundColor: 'rgba(39, 174, 96, 0.7)',
+            borderColor: 'rgba(39, 174, 96, 1)',
+            borderWidth: 1
+          },
+          {
+            label: 'Unbekannt %',
+            data: hourlyPresenceData.map(h => h.unknownPercent.toFixed(1)),
+            backgroundColor: 'rgba(149, 165, 166, 0.7)',
+            borderColor: 'rgba(149, 165, 166, 1)',
+            borderWidth: 1
+          },
+          {
+            label: 'Draußen %',
+            data: hourlyPresenceData.map(h => h.outsidePercent.toFixed(1)),
+            backgroundColor: 'rgba(231, 76, 60, 0.7)',
+            borderColor: 'rgba(231, 76, 60, 1)',
+            borderWidth: 1
+          }
+        ]
+      },
+      options: {
+        responsive: true,
+        scales: {
+          x: {
+            stacked: true
+          },
+          y: {
+            stacked: true,
+            beginAtZero: true,
+            max: 100,
+            title: { display: true, text: 'Prozent' }
+          }
+        }
+      }
+    });
+
+    // Monthly presence chart (by month of year)
+    const monthNames = ['Jan', 'Feb', 'Mär', 'Apr', 'Mai', 'Jun', 'Jul', 'Aug', 'Sep', 'Okt', 'Nov', 'Dez'];
+    const monthlyPresenceData = monthlyPresence.map(m => {
+      const total = m.hoursInside + m.hoursOutside + m.hoursUnknown;
+      return {
+        month: m.month,
+        insidePercent: total > 0 ? (m.hoursInside / total * 100) : 0,
+        unknownPercent: total > 0 ? (m.hoursUnknown / total * 100) : 0,
+        outsidePercent: total > 0 ? (m.hoursOutside / total * 100) : 0
+      };
+    });
+
+    new Chart(document.getElementById('monthlyPresenceChart'), {
+      type: 'bar',
+      data: {
+        labels: monthlyPresenceData.map(m => monthNames[m.month - 1]),
+        datasets: [
+          {
+            label: 'Drinnen %',
+            data: monthlyPresenceData.map(m => m.insidePercent.toFixed(1)),
+            backgroundColor: 'rgba(39, 174, 96, 0.7)',
+            borderColor: 'rgba(39, 174, 96, 1)',
+            borderWidth: 1
+          },
+          {
+            label: 'Unbekannt %',
+            data: monthlyPresenceData.map(m => m.unknownPercent.toFixed(1)),
+            backgroundColor: 'rgba(149, 165, 166, 0.7)',
+            borderColor: 'rgba(149, 165, 166, 1)',
+            borderWidth: 1
+          },
+          {
+            label: 'Draußen %',
+            data: monthlyPresenceData.map(m => m.outsidePercent.toFixed(1)),
+            backgroundColor: 'rgba(231, 76, 60, 0.7)',
+            borderColor: 'rgba(231, 76, 60, 1)',
+            borderWidth: 1
+          }
+        ]
+      },
+      options: {
+        responsive: true,
+        scales: {
+          x: {
+            stacked: true
+          },
+          y: {
+            stacked: true,
+            beginAtZero: true,
+            max: 100,
+            title: { display: true, text: 'Prozent' }
+          }
+        }
+      }
+    });
+
+    // Monthly prey chart
+    new Chart(document.getElementById('monthlyPreyChart'), {
+      type: 'bar',
+      data: {
+        labels: monthlyPreyCount.map(m => m.month),
+        datasets: [
+          {
+            label: 'Beute',
+            data: monthlyPreyCount.map(m => m.preyCount),
+            backgroundColor: 'rgba(243, 156, 18, 0.7)',
+            borderColor: 'rgba(243, 156, 18, 1)',
+            borderWidth: 1
+          }
+        ]
+      },
+      options: {
+        responsive: true,
+        scales: {
+          y: {
+            beginAtZero: true,
+            title: { display: true, text: 'Anzahl' }
+          }
+        }
+      }
+    });
+
+    // Monthly time series chart (line chart)
+    new Chart(document.getElementById('monthlyTimeSeriesChart'), {
+      type: 'line',
+      data: {
+        labels: monthlyTimeSeries.map(m => m.month),
+        datasets: [
+          {
+            label: 'Drinnen',
+            data: monthlyTimeSeries.map(m => m.hoursInside.toFixed(1)),
+            backgroundColor: 'rgba(39, 174, 96, 0.2)',
+            borderColor: 'rgba(39, 174, 96, 1)',
+            borderWidth: 2,
+            fill: true
+          },
+          {
+            label: 'Unbekannt',
+            data: monthlyTimeSeries.map(m => m.hoursUnknown.toFixed(1)),
+            backgroundColor: 'rgba(149, 165, 166, 0.2)',
+            borderColor: 'rgba(149, 165, 166, 1)',
+            borderWidth: 2,
+            fill: true
+          },
+          {
+            label: 'Draußen',
+            data: monthlyTimeSeries.map(m => m.hoursOutside.toFixed(1)),
+            backgroundColor: 'rgba(231, 76, 60, 0.2)',
+            borderColor: 'rgba(231, 76, 60, 1)',
+            borderWidth: 2,
+            fill: true
+          }
+        ]
+      },
+      options: {
+        responsive: true,
+        scales: {
+          y: {
+            beginAtZero: true,
+            title: { display: true, text: 'Stunden' }
+          }
+        }
+      }
+    });
+
+    // Monthly activity chart (line chart)
+    new Chart(document.getElementById('monthlyActivityChart'), {
+      type: 'line',
+      data: {
+        labels: monthlyActivity.map(m => m.month),
+        datasets: [
+          {
+            label: 'Eintritte',
+            data: monthlyActivity.map(m => m.entries),
+            backgroundColor: 'rgba(39, 174, 96, 0.2)',
+            borderColor: 'rgba(39, 174, 96, 1)',
+            borderWidth: 2,
+            fill: false
+          },
+          {
+            label: 'Austritte',
+            data: monthlyActivity.map(m => m.exits),
+            backgroundColor: 'rgba(231, 76, 60, 0.2)',
+            borderColor: 'rgba(231, 76, 60, 1)',
+            borderWidth: 2,
+            fill: false
           }
         ]
       },

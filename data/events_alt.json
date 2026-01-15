@@ -1,0 +1,659 @@
+[
+  {
+    "id": "evt_1768494049769_z8lk9wv",
+    "timestamp": "2025-12-01T00:50:57.000Z",
+    "direction": "out",
+    "confidence": 0.9,
+    "prey": false,
+    "imageFile": "evt_1768494049769_z8lk9wv.jpg",
+    "rawText": "out - Skipped prey detection out - Skipped prey detection out - Skipped prey detection out - Skipped prey detection\nDetected head Cropped ROI Detected head Cropped RO: Detected head Cropped ROI Detected head Cropped ROI"
+  },
+  {
+    "id": "evt_1768494048595_i5qcp5g",
+    "timestamp": "2025-12-01T03:29:32.000Z",
+    "direction": "in",
+    "confidence": 0.9,
+    "prey": false,
+    "imageFile": "evt_1768494048595_i5qcp5g.jpg",
+    "rawText": "in - No prey detected in - No prey detected in - No prey detected in - No prey detected\n\nDetected head Cropped ROI Detected head Cropped ROI Detected head Cropped ROI Detected head Cropped ROI\nB Ubi CN _ fihgestold B Threshold Global Threshold Adaptive Threshold Combined Threshold Global Threshold Adaptive Threshold Combined Threshold Global Threshold ERE: ihreheid Combined Threskold\nCombined Threshold 2x2 Kernel Opened Image A | A A | A\nBh gg Combined Threshold 2x2 Kernel Opened Image Combined Theashala kernel (me ee eared Eyre TT\nOpened Image 3x3 Kernel Dilated Image Bh Bh BA A Rh H A\nB. TH A BR D = 3 | Bm EE - OpenediInoge 3x3 Kernel Dilated Image\n\nRe-Inverted Contours Bh A A is A A +H A\n\nRE Iiekted contoibs Re-Inverted Contours\n- _. Gu = a _ Be _ A q"
+  },
+  {
+    "id": "evt_1768494046087_i8l5xdm",
+    "timestamp": "2025-12-01T18:26:37.000Z",
+    "direction": "in",
+    "confidence": 0.9,
+    "prey": false,
+    "imageFile": "evt_1768494046087_i8l5xdm.jpg",
+    "rawText": "in - No prey detected in - No prey detected in - No prey detected in - No prey detected\n\nDetected head Cropped ROI Detected head Cropped ROI Detected head Cropped ROI Detected head Cropped ROI\nGlobal Threshold Adaptive Threshold Combined Threshold Global Threshold Adaptive Threshold Combined Threshold - F L\nB. [ N_ Bh. GG NL @ Global Threshold Adaptive Threshold Combined Threshold Global Threshold Adaptive Threshold Combined Threshold\nErie Plush zit Bp Combined Threshold 2x2 Kernel Opened Image A \\ A A NN A\nBh. o == — Bh. A A Conbined Threshold 2x2 Kernel Opened Inage Conbined Threshold 2x2 Kernel Opened Inage\nDpenedsinmge 3x3iKetnel Dilated: ings Opened Image 3x3 Kernel Dilated Image A A A A\n| & HH — A A. + iE _— Ah. Opened Image 3x3 Kernel Dilated Image Opened Image 3x3 Kernel Dilated Image\n\nRe-Inverced Contours Re-Inverted Contours A git Ah A im A\n\n@  U B _ BB _ @ “q gE 0"
+  },
+  {
+    "id": "evt_1768494043485_nz1sghx",
+    "timestamp": "2025-12-02T00:42:33.000Z",
+    "direction": "out",
+    "confidence": 0.9,
+    "prey": false,
+    "imageFile": "evt_1768494043485_nz1sghx.jpg",
+    "rawText": "out - Skipped prey detection out - Skipped prey detection out - Skipped prey detection out - Skipped prey detection\nDetected head Cropped RC Detected head Cropped ROI Detected head Cropped ROI Detected head Cropped ROI"
+  },
+  {
+    "id": "evt_1768494042318_62jmb9j",
+    "timestamp": "2025-12-02T02:34:55.000Z",
+    "direction": "in",
+    "confidence": 0.9,
+    "prey": false,
+    "imageFile": "evt_1768494042318_62jmb9j.jpg",
+    "rawText": "in - No prey detected in - No prey detected in - No prey detected in - No prey detected\n\nDetected head Cropped ROI Detected head Cropped ROI Detected head Cropped ROI Detected head Cropped ROI\nEla ieeshiale [ASEpEINER hue Stal Ea Ticehil Global Threshold Adaptive Threshold Combined Threshold Global Threshold ERE inuheld Comb neh nes healed I — » — Conbinadi Threshold\nAh. [] Ah. ha EE he 9 CL KL\nCombined Threshold 2x2 Kernel Opened Inage Canine Eee ai 2x2 Kernel rene ho a ho ho _ Ah\n\npened Inage :\n\nAh. ° LH Ah. A he A al @ L _ fal LL\nOpened Image 3x3 Kernel Dilated Image OpeREalInaEe SvaiKarnal DilatediTings hw ha A H Aho\nAho éb HH hoo he + HH hs Opened Image 3x3 Kernel Dilated Image il Tage Re ated gage\n\nNE i Re-Tnverted Conour he ii he he a he\n\nRe-Inverted Contours\n- hah 9"
+  },
+  {
+    "id": "evt_1768494039697_nyx2k4j",
+    "timestamp": "2025-12-02T14:44:18.000Z",
+    "direction": "in",
+    "confidence": 0.9,
+    "prey": false,
+    "imageFile": "evt_1768494039697_nyx2k4j.jpg",
+    "rawText": "in - No prey detected in - No prey detected in - No prey detected in - No prey detected\nDetected head Cropped ROI Detected head Cropped ROI Detected head Cropped ROI Detected head Cropped ROI\nGlobal Threshold Adaptive Threshold Combined Threshold\nB. ON B. Global Threshold Adaptive Threshold Combined Threshold Global Threshold Adaptive Threshold Combined Threshold Global Threshold Adaptive Threshold Combined Threshold\nCombined Threshold 2x2 Kernel Opened Image B_ EY B_ Bh [ A -y | A\nB. | - Combined Threshold 2x2 Kernel Opened Image Combined Threshold 2x2 Kernel Opened Image Combined Threshold 2x2 Kernel Opened Image\nOpened Image 3x3 Kernel Dilated Image B_ Bh A A A A\n| - aD iE | Opened Image 3x3 Kernel Dilated Image Opened Image 3x3 Kernel Dilated Image Opened Image 3x3 Kernel Dilated Image\nRe-Inverted Contours Bh HH A A HH A A HH Ah\n- - Re-Inverted Contours Re-Inverted Contours Re-Inverted Gotan"
+  },
+  {
+    "id": "evt_1768494037305_02q8fnl",
+    "timestamp": "2025-12-03T04:02:17.000Z",
+    "direction": "invalid",
+    "confidence": 0,
+    "prey": false,
+    "imageFile": "evt_1768494037305_02q8fnl.jpg",
+    "rawText": "in - No cat head detected out - Skipped prey detection out - Skipped prey detection out - Skipped prey detection\nDetected head Cropped ROI Detected head Cropped ROI Detected head Cropped ROI"
+  },
+  {
+    "id": "evt_1768494036172_a1wezsy",
+    "timestamp": "2025-12-03T05:15:11.000Z",
+    "direction": "in",
+    "confidence": 0.9,
+    "prey": false,
+    "imageFile": "evt_1768494036172_a1wezsy.jpg",
+    "rawText": "in - No prey detected in - No prey detected in - No prey detected in - No prey detected\nDetected head Cropped ROI Detected head Cropped ROI Detected head Cropped ROI Detected head Cropped ROI\nGlobal Threshold Adaptive Threshold Conbined Threshold - - -\nGlobal Threshold Adaptive Threshold Combined Threshold\nh_ _ A Global Threshold Adaptive Threshold Combined Threshold oo Te) EP\nCombined Threshold 2x2 Kernel Opened Inage Ah | A A. ~_ A A |] A _\nGosbined Thies 2x2 Hemel Orenedzlipes Combined Threshold 2x2 Kernel Opened Image\n@) [+ = A o M] — A Combined Threshold 2x2 Kernel Opened Image\nDpeoed;Tnsee Keel Dilaged Tree A LH A is\nOpened Image 3x3 Kernel Dilated Image\n& = Opened Image 3x3 Kernel Dilated Image\n= A & HH = A. éb Opened Image 3x3 Kernel Dilated Image\nRe-Tnverted Contours HH & -_—\nRe-Inverted Contours\nRe-Inverted Contours\n@ » ho Ba g ['§"
+  },
+  {
+    "id": "evt_1768494033777_t198pgm",
+    "timestamp": "2025-12-03T20:34:33.000Z",
+    "direction": "in",
+    "confidence": 0.9,
+    "prey": false,
+    "imageFile": "evt_1768494033777_t198pgm.jpg",
+    "rawText": "in - No prey detected in - No prey detected in - No prey detected in - No prey detected\nDetected head Cropped ROI Detected head Cropped ROI Detected head Cropped ROI Detected head Cropped ROI\nGlobal Threshold Adaptive Threshold Combined Threshold ~ »\nBh _ Bh Gilabat Thneshold Adepeivcathizeshold Conbined Threshold Global Threshold AdapEive Thyeshold Combined Threshold gyopat Threshold Adaptive Threshold Combined Threshold\nCombined Threshold 2x2 Kernel OpenadiTrage Ah ae Ah A [ A A Is A\nCombined Threshold 2x2 Kernel Opened Image Combined Threshold 2x2 Kernel Opened Image\nBh. o Bs = Bh. A A Conbined Threshold 2x2 Kernel Opened Tnage\nOpened Inage 3x3 Kernel Dilated Image A Ah A an A\nOpened Image 3x3 Kernel Dilated Image (re ae x3 Ketel Dilagedl nage\n® = Bo “A o tl\nResToverted Sentours Ah ia Ah & HH\neslerEd (GENET) Re-Inverted Contours\nWU Be A. Be L q"
+  },
+  {
+    "id": "evt_1768494031315_gnr8m90",
+    "timestamp": "2025-12-04T19:55:02.000Z",
+    "direction": "in",
+    "confidence": 0.9,
+    "prey": false,
+    "imageFile": "evt_1768494031315_gnr8m90.jpg",
+    "rawText": "in - No prey detected in - No prey detected in - No prey detected in - No prey detected\n\nDetected head Cropped ROL Detected head Cropped ROL Detected head Cropped ROL Detected head Cropped ROL\nB [| B_ A. | B_ Global Threshold Adaptive Threshold Combined Threshold Global Threshold Adaptive Threshold Combined Threshold\nCombined Threshold 2x2 Kernel Opened Inage A _ [5] A A [\\_] A\nBh. ° Bh. A. 2x2 Kernst A Combined Threshold 2x2 Kernel Opened Image Combined Threshold 2x2 Kernel Opened Image\nOpened Inage 3x3 Kernel Dilated Inage TE ae Eryn A _ A _ A A\n\nened Inage x3 Kerne ated Inage\n\nBh éb HH —_— Bh. A 7 +] A Opened Image 3x3 Kernel Dilated Image Opened Image 3x3 Kernel Dilated Image\n\nfeasts Fontes A HH A _ A HH A\n\nRe-Inverted Contours\nB  _ Bh BB Re-Inverted Contours Re-Inverted Contours"
+  },
+  {
+    "id": "evt_1768494029014_qr9r1gm",
+    "timestamp": "2025-12-05T16:07:50.000Z",
+    "direction": "in",
+    "confidence": 0.9,
+    "prey": false,
+    "imageFile": "evt_1768494029014_qr9r1gm.jpg",
+    "rawText": "in - No prey detected in - No prey detected in - No prey detected in - No prey detected\nDetected head Cropped ROI Detected head Cropped ROI Detected head Cropped ROI Detected head Cropped ROI\nGlobal Threshold Adaptive Threshold Combined Threshold Global Threshold Adaptive Threshold Combined Threshold - 5 l _\nB. Be B. @ NL @ Global Threshold Adaptive Threshold Combined Threshold Global Threshold Adaptive Threshold Combined Threshold\nCombined Threshold 2x2 Kernel Opened Image Combined Threshold 2x2 Kernel Opened Image A NE A Ao [A] A\nBh. o Bh. A o A Combined Threshold 2x2 Kernel Opened Image Combined Threshold 2x2 Kernel Opened Image\nOpened Image 3x3 Kernel Dilated Image Opened Image 3x3 Kernel Dilated Image A A. A HH A\nA® “ho bh.® “hk _.9 kh L 9° -L\n“-— i - a == A HH Ah Ao i Ah\n@ BU A B _ ' Sg \"GE i"
+  },
+  {
+    "id": "evt_1768494026481_tli7hkj",
+    "timestamp": "2025-12-06T01:54:49.000Z",
+    "direction": "in",
+    "confidence": 0.9,
+    "prey": false,
+    "imageFile": "evt_1768494026481_tli7hkj.jpg",
+    "rawText": "in - No prey detected in - No prey detected in - No prey detected in - No prey detected\n\nDetected head Cropped ROI Detected head Cropped ROI Detected head Cropped ROI Detected head Cropped ROI\nGlobal Threshold Adaptive Threshold Combined Threshold Global Threshold Adaptive Threshold Combined Threshold . 5 -\nGg ~ Bh. A | A Global Threshold Adaptive Threshold Combined Threshold Global Threshold Adaptive Threshold Combined Threshold\nCombnpedRIhEe hold 22 brill Alpe Combined Threshold 2x2 Kernel Opened Image A Ne A A [_- A\nBh. o a — Bh. A . A Conbined Threshold 2x2 Kernel Opened Inage Conbrined Threshold 2x2 Kernel Gn\nOpened Image 3x3 Kernel Dilated nage Onencdimnge 2x3 Kernel DitatediTiae A Ah A A\nBh éb HH — Ah Ah. aD iE Ah. Opened Image 3x3 Kernel Dilated Image Opened Image 3x3 Kernel Dilated Image\n\nRecTaiected Contains Re-Inverted Contours Ah git Ah Ao im A\n\nhi OP Pw\nnN"
+  },
+  {
+    "id": "evt_1768494023922_6wqb5bz",
+    "timestamp": "2025-12-06T10:17:59.000Z",
+    "direction": "in",
+    "confidence": 0.9,
+    "prey": false,
+    "imageFile": "evt_1768494023922_6wqb5bz.jpg",
+    "rawText": "in - No prey detected in - No prey detected in - No prey detected in - No prey detected\nDetected head Cropped ROL Detected head Cropped ROI Detected head Cropped ROI Detected head Cropped ROI\nA [| A Global Threshold Adaptive Threshold Combined Threshold Global Threshold Adaptive Threshold Combined Threshold Global Threshold Adaptive Threshold Combined Threshold\nCombined Threshold 2x2 Kernel Opened Image ha | he he | he hoa | ho\nA A Combined Threshold 2x2 Kernel Opened Image Conbined Threshold 2x2 Kernel Opened Image Ee ea 2x2 Kernel cai\nOpened Image 3x3 Kernel Dilated Image he ha he he Aha ha\nAho aD iE Aho Opened Image 3x3 Kernel Dilated Image Opened Image 3x3 Kernel Dilated Image Opened Image 3x3 Kernel Dilated Image\nRe-Inverted Contours ha HH ha ha TH hs ha HH he\nGu A Re-Inverted Contours Re-Inverted Contours Pai hvabsed Gate"
+  },
+  {
+    "id": "evt_1768494021550_7op5qog",
+    "timestamp": "2025-12-06T23:25:37.000Z",
+    "direction": "in",
+    "confidence": 0.9,
+    "prey": false,
+    "imageFile": "evt_1768494021550_7op5qog.jpg",
+    "rawText": "in - No prey detected in - No prey detected in - No prey detected in - No prey detected\nDetected head Cropped ROI Detected head Cropped ROI Detected head Cropped ROI Detected head Cropped ROI\nGlobal Threshold Adaptive Threshold Combined Threshold Global Threshold Adaptive Threshold Combined Threshold Global Threshold Adaptive Threshold Conbined Threshold Global Threshold Adaptive Threshold Combined Threshold\nCombined Threshold 2x2 Kernel Opened Image Combined Threshold 2x2 Kernel Opened Image Combined Threshold 2x2 Kernel Opened Image ihe ee 2x2 Kernel Opened Image\nOpened Image 3x3 Kernel Dilated Image Opened Image 3x3 Kernel Dilated Image Opened Image 3x3 Kernel Dilated Image Ee 3x3 Kernel [iE\nREInUEECED: Gansoiies Re-Tnverted Contours Re-Tnverted Contours ha ha\nA= o> A= .>o- oo .>o- [ L"
+  },
+  {
+    "id": "evt_1768494019496_5v0d5su",
+    "timestamp": "2025-12-07T04:21:29.000Z",
+    "direction": "out",
+    "confidence": 0.9,
+    "prey": false,
+    "imageFile": "evt_1768494019496_5v0d5su.jpg",
+    "rawText": "out - Skipped prey detection out - Skipped prey detection out - Skipped prey detection out - Skipped prey detection\nDetected head Cropped RO: Detected head Cropped ROI Detected head Cropped ROI Detected head Cropped ROI"
+  },
+  {
+    "id": "evt_1768494018254_ect67st",
+    "timestamp": "2025-12-07T04:27:49.000Z",
+    "direction": "in",
+    "confidence": 0.9,
+    "prey": false,
+    "imageFile": "evt_1768494018254_ect67st.jpg",
+    "rawText": "in - No prey detected in - No prey detected in - No prey detected in - No prey detected\nDetected head Cropped ROI Detected head Cropped ROI Detected head Cropped ROI Detected head Cropped ROI\nGlobal Threshold Adaptive Threshold Combined Threshold . - -\nA [a] A Global Threshold Adaptive Threshold Combined Threshold CET TE ASakive Thrdstold TAT Ca ET bid ara\nSos ned) Threshold Gazemet geened. nage Ah | Ah Aho = A. Ao NE @\nCombined Threshold 2x2 Kernel Opened Image\n(©) [+ =] ° GonbnnedThGe sald ZKerRel RlpEaGet Ea Combined Threshold 2x2 Kernel Opened Image\nme SER NE J Ao HH] hao HH\n— Opened Image 3x3 Kernel Dilated Image\n— fas) Opened Image 3x3 Kernel Dilated Image ienealiuags Sea ernal Dilated Inage\nI\" Co. 1 hao © a - ho D +H =\nRe-Inverted Contours\n= hh .o - L L"
+  },
+  {
+    "id": "evt_1768494015741_hmc6hn3",
+    "timestamp": "2025-12-07T05:22:49.000Z",
+    "direction": "out",
+    "confidence": 0.9,
+    "prey": false,
+    "imageFile": "evt_1768494015741_hmc6hn3.jpg",
+    "rawText": "out - Skipped prey detection out - Skipped prey detection out - Skipped prey detection out - Skipped prey detection\nDetected head Cropped ROI Detected head Cropped ROI Detected head Cropped ROI Detected head Cropped ROI"
+  },
+  {
+    "id": "evt_1768494014576_9uk1mvo",
+    "timestamp": "2025-12-07T05:26:09.000Z",
+    "direction": "in",
+    "confidence": 0.9,
+    "prey": false,
+    "imageFile": "evt_1768494014576_9uk1mvo.jpg",
+    "rawText": "in - No prey detected in - No prey detected in - No prey detected in - No prey detected\nDetected head Cropped ROI Detected head Cropped ROI Detected head Cropped ROI Detected head Cropped ROI\nA = | Slane ho =aho 10 SEER Teh Combined Threshold Global Threshold Adaptive Threshold Combined Threshold Global Threshold Adaptive Threshold Combined Threshold\nCombined Threshold 2x2 Kernel Opened Image Aho No A hao _ Ah Aho N= bh\nA A ConbinediTheashold 2 Kernel Ge Combined Threshold 2x2 Kernel Opened Image Combined Threshold 2x2 Kernel Opened Image\nOpened Image 3x3 Kernel Dilated Image Ao A Aha ho Aho ho\nAh fast HH] ho TERETE ee) SET Opened Tnage 3x3 Kernel Dilated Inage Opened Tnage 3x3 Kernel Dilated Inage\nRe-Inverted Contours A +H ho ha HH ho ha is he\nGP - ee Contours Re-Inverted Contours Re-Inverted Contours"
+  },
+  {
+    "id": "evt_1768494012203_g0f0l8n",
+    "timestamp": "2025-12-07T05:38:14.000Z",
+    "direction": "invalid",
+    "confidence": 0,
+    "prey": false,
+    "imageFile": "evt_1768494012203_g0f0l8n.jpg",
+    "rawText": "in - No cat head detected out - Skipped prey detection out - Skipped prey detection out - Skipped prey detection\nDetected head Cropped Detected head Cropped R( Detected head Cropped ROI"
+  },
+  {
+    "id": "evt_1768494010868_wpbw7yw",
+    "timestamp": "2025-12-07T06:20:18.000Z",
+    "direction": "in",
+    "confidence": 0.9,
+    "prey": false,
+    "imageFile": "evt_1768494010868_wpbw7yw.jpg",
+    "rawText": "in - No prey detected in - No prey detected in - No prey detected in - No prey detected\nDetected head Cropped ROI Detected head Cropped ROI Detected head Cropped ROI Detected head Cropped ROI\nB_ Threshold [CC Jheeshold B_ Threshold Global Threshold Adaptive Threshold Conbined Threshold Global Threshold Adaptive Threshold Conbined Threshold Global Threshold Roi hre=hald Combined Threshold\nCombined Threshold 2x2 Kernel Opened Image A NJ A A BN B_\nB_ B_ Gostined Thies 2x2 Hemel Orened;lrpes Combined Threshold 2x2 Kernel Opened Image a Ta ooeraaTiEgs\nDAE LE ERE LEE BAIEEEI IEE) i A A A A\nOpened Image 3x3 Kernel Dilated Image Spenediinags Rr Dilated Inage\n- H = Bh D ] Ah KE azz 1\nRe-Inverted Contours A i Ah A HH Ah\nRe-Tnverced Contes Re-Inverted Contours\nBa Bh Be _ Be pL KE"
+  },
+  {
+    "id": "evt_1768494008321_kqf9ehc",
+    "timestamp": "2025-12-08T12:33:13.000Z",
+    "direction": "out",
+    "confidence": 0.9,
+    "prey": false,
+    "imageFile": "evt_1768494008321_kqf9ehc.jpg",
+    "rawText": "out - Skipped prey detection out - Skipped prey detection out - Skipped prey detection out - Skipped prey detection\nDetected head Cropped R Detected head Cropped Detected head Cropped RO] Detected head Cropped ROI"
+  },
+  {
+    "id": "evt_1768494007076_dr0mfq6",
+    "timestamp": "2025-12-08T18:35:18.000Z",
+    "direction": "in",
+    "confidence": 0.9,
+    "prey": false,
+    "imageFile": "evt_1768494007076_dr0mfq6.jpg",
+    "rawText": "in - No prey detected in - No prey detected in - No prey detected in - No prey detected\nDetected head Cropped ROI Detected head Cropped ROI Detected head Cropped ROI Detected head Cropped ROI\nGlobal Threshold Adaptive Threshold Combined Threshold l -\nA _ A Global Threshold Adaptive Threshold Combined Threshold Global Threshold Adaptive Threshold Combined Threshold (GlabaliThras hold Adaptive Threshold Eombanedi Threshold\nCombined Threshold 2x2 Kernel Opened Image A. - A Ao N= A Aha (_ @\nA ° Ah Combined Threshold 2x2 Kernel Opened Image EonbAnad Threshold 3x2 Kernel 0 ed Image CT ee Opened times\nOpened Image 3x3 Kernel Dilated Image A. A. A H Ao A as Ao\nOpened Image 3x3 Kernel Dilated Image 5\néb HH —_ 7 a= A Opened Inage 3x3 Kernel Dilated Inage i 3x3 Kernel Dilated Inage\na ot Aho +H ho he HH ha\nRe-Inverted Contours\nA L Lo [ q"
+  },
+  {
+    "id": "evt_1768494004576_15n957a",
+    "timestamp": "2025-12-09T02:38:44.000Z",
+    "direction": "out",
+    "confidence": 0.9,
+    "prey": false,
+    "imageFile": "evt_1768494004576_15n957a.jpg",
+    "rawText": "out - Skipped prey detection out - Skipped prey detection out - Skipped prey detection out - Skipped prey detection\nDetected head Cropped Detected head Cropped RC Detected head Cropped RO Detected head Cropped ROI"
+  },
+  {
+    "id": "evt_1768494003324_yijt8tc",
+    "timestamp": "2025-12-09T17:46:08.000Z",
+    "direction": "in",
+    "confidence": 0.9,
+    "prey": false,
+    "imageFile": "evt_1768494003324_yijt8tc.jpg",
+    "rawText": "in - No prey detected in - No prey detected in - No prey detected in - No prey detected\nDetected head Cropped ROI Detected head Cropped ROI Detected head Cropped ROI Detected head Cropped ROI\ngg CN] Bh Global Threshold Adaptive Threshold Combined Threshold Global Threshold Adaptive Threshold Combined Threshold Global Threshold Adaptive Threshold Combined Threshold\nined Threshold 2x2 Kernel Opened Ii A | A A [| A A | N_ A\nB_ Shad Bo Combined Threshold 2x2 Kernel Opened Image Conbined Threshold 2x2 Kernel Opened Image EhinealT resale 2x2 Kernel Opened Tnage\nhe ee 3x3 Kernel Elin A A Bh A A Ah\nB. oD +H A. Opened Image 3x3 Kernel Dilated Image Opened Image 3x3 Kernel Dilated Image Opened Image 3x3 Kernel Dilated Image\nRe-Tnverted Contours Bh git Ah A is A Ah is Ah\ngg BB Re-Inverted Contours Re-Tnverted Contours Re-Inverted Contours"
+  },
+  {
+    "id": "evt_1768494000973_9u0bznw",
+    "timestamp": "2025-12-10T17:36:09.000Z",
+    "direction": "in",
+    "confidence": 0.9,
+    "prey": false,
+    "imageFile": "evt_1768494000973_9u0bznw.jpg",
+    "rawText": "in - No prey detected in - No prey detected in - No prey detected in - No prey detected\nDetected head Cropped ROI Detected head Cropped ROI Detected head Cropped ROI Detected head Cropped ROI\nGlobal Threshold Adaptive Threshold Combined Threshold ; - =\nGlobal Threshold Adaptive Threshold Combined Threshold\nBh. } ~~] — Bh. A [\\_. A Global Threshold ideptite Thoeshold Cosained- The eso Ld Pa hr Adaptive Threshold Combined Threshold\nCombined Threshold 2x2 Kernel Opened Image TE Em Renta A Be A A A A\nom reel) Thiesho 2xZienne pened Tage! Combined Threshold 2x2 Kernel Opened Image\n(©) [+ — Bh. © m= —— Ah. Combined Threshold 2x2 Kernel Opened Image\nQpenedilnage Sxalilteinet Dilaced Image A HH] Ah is\nOpened Image 3x3 Kernel Dilated Inage\n— Opened Image 3x3 Kernel Dilated Image\n— Ah + HH — Ah fas) Opened Image 3x3 Kernel Dilated Image\nRe-Inverted Contours i + =\nRe-Inverted Contours\nRe-Inverted Contours\nAB Ah kh q"
+  },
+  {
+    "id": "evt_1768493998537_178s109",
+    "timestamp": "2025-12-10T21:41:06.000Z",
+    "direction": "in",
+    "confidence": 0.9,
+    "prey": false,
+    "imageFile": "evt_1768493998537_178s109.jpg",
+    "rawText": "in - No prey detected in - No prey detected in - No prey detected in - No prey detected\nDetected head Cropped ROI Detected head Cropped ROI Detected head Cropped ROI Detected head Cropped ROI\nGlobal Threshold Adaptive Threshold Combined Threshold Global Threshold Adaptive Threshold Combined Threshold - -\nB_ Em GG A [( A Global Threshold Adaptive Threshold Combined Threshold 1opal Threshold ATaiEie Thresheld Serbia Trea\nCombined Threshold 2x2 Kernel Opened Image Combined Threshold 2x2 Kernel Opened Image Aho | _ @ Ao = @\nBh = H = Bh A ° Es = Ah ER fm kL I Fe ¢\nRENETO ELLE Willd Lage Opened Image 3x3 Kernel Dilated Image A Aho Ao H Ao\n— — ened Image 3x3 Kernel Dilated Image\nBh ® HH = Ah A. ® im = Ah I ’ ¢ ) ’ a eam rT\n“ “-—  —— a ho Ea ho Ao D is ho\nRe-Inverted Contours\nha > [ q"
+  },
+  {
+    "id": "evt_1768493995989_pp4wf0q",
+    "timestamp": "2025-12-11T17:11:03.000Z",
+    "direction": "out",
+    "confidence": 0.9,
+    "prey": false,
+    "imageFile": "evt_1768493995989_pp4wf0q.jpg",
+    "rawText": "out - Skipped prey detection out - Skipped prey detection out - Skipped prey detection out - Skipped prey detection\nDetected head Cropped RO Detected head Cropped ROI Detected head Cropped ROI Detected head Cropped ROI"
+  },
+  {
+    "id": "evt_1768493994770_1ekkl79",
+    "timestamp": "2025-12-11T17:28:26.000Z",
+    "direction": "in",
+    "confidence": 0.9,
+    "prey": false,
+    "imageFile": "evt_1768493994770_1ekkl79.jpg",
+    "rawText": "in - No prey detected in - No prey detected in - No prey detected in - No prey detected\nDetected head Cropped ROI Detected head Cropped ROI Detected head Cropped ROI Detected head Cropped ROI\nGlobal Threshold Adaptive Threshold Conbined Threshold - - -\nGlobal Threshold Adaptive Threshold Combined Threshold < :\nA } |] A Global Threshold Adaptive Threshold Combined Threshold global Threshold REC dhieateld oe rere\nCombined Threshold 2x2 Kernel Opened Image A [1 A A = A\nCombined Threshold 2x2 Kernel Opened Image\nOo H — o 1 pa Belles afi: 1 2: Gaal Brisas Ebi Combined Threshold 2x2 Kernel Opened Image\nTET cis EE [+ m= =\n+ —_— Opened Image 3x3 Kernel Dilated Image\n& — Opened Image 3x3 Kernel Dilated Image Ghendarnage Ns KemeL Diaeaa Rage\nRe-Inverted Contours éb HH = & —\nRe-Inverted Contours\nRe-Inverted Contours\nGu . [ L"
+  },
+  {
+    "id": "evt_1768493992481_juybgp2",
+    "timestamp": "2025-12-12T18:47:35.000Z",
+    "direction": "in",
+    "confidence": 0.9,
+    "prey": false,
+    "imageFile": "evt_1768493992481_juybgp2.jpg",
+    "rawText": "in - No prey detected in - No prey detected in - No prey detected in - No prey detected\nDetected head Cropped ROL Detected head Cropped ROI Detected head Cropped ROI Detected head Cropped ROL\nGlobal Threshold ESptine ihuesheld Combined Threshold Global Threshold Adaptive Threshold Combined Threshold - p -\nA _ \\_ A _ A [\\_] A Global Threshold Adaptive Threshold Leufileas Biase la Global Threshold Adaptive Threshold Combined Threshold\nConbinad Threshold a Karat ea Combined Threshold 2x2 Kernel Opened Image A NE A Ao A A\nA B_ A o A Combined Threshold 2x2 Kernel Opened Image Combined Threshold 2x2 Kernel Opened Image\nOpened Image 3x3 Kernel Dilated Image Opened Image 3x3 Kernel Diflie Tn A Aho Ao is Ao\nA D iit = A A D it = Ah. L @ mT Lb LE D ™ Ga\n— = yo Cm ho HH ho Ah a i ho\nRe-Inverted Contours\nho - L <q"
+  },
+  {
+    "id": "evt_1768493990087_kkgqndd",
+    "timestamp": "2025-12-12T19:40:23.000Z",
+    "direction": "in",
+    "confidence": 0.9,
+    "prey": false,
+    "imageFile": "evt_1768493990087_kkgqndd.jpg",
+    "rawText": "in - No prey detected in - No prey detected in - No prey detected in - No prey detected\nDetected head Cropped ROI Detected head Cropped ROI Detected head Cropped ROI Detected head Cropped ROI\nGlobs athe shal pidsntsteRtliie hol i Combined Threshold Global Threshold Adaptive Threshold Combined Threshold Giobal Threshold Adaptive Threshold Combined Threshold ¢10p-1 Threshold TR TR shad ert\noabincd Thizeshalld 2a2ikermal QgetiedTage Conbined Threshold 2x2 Kernel Opened Image h = h A ~~ A\nA o a= — A A = A L |G Combined Threshold 2x2 Kernel Opened Image\nSpenediluee Selcaiy Used Tree Opene: A = HH] A\nCnr ikemel Dlafet age: Opened Image 3x3 Kernel Dilated Image\ni H = Ah D ie = Ah Ao ® is Ah L am Ww\n“a — Re fnver xed Somoure ho Ea bh\nRe-Inverted Contours\nho Gu .°> ( ["
+  },
+  {
+    "id": "evt_1768493987723_zp3xtnw",
+    "timestamp": "2025-12-14T07:31:28.000Z",
+    "direction": "out",
+    "confidence": 0.9,
+    "prey": false,
+    "imageFile": "evt_1768493987723_zp3xtnw.jpg",
+    "rawText": "out - Skipped prey detection out - Skipped prey detection out - Skipped prey detection out - Skipped prey detection\nDetected head Cropped F Detected head Cropped Detected head Cropped R Detected head Cropped RC"
+  },
+  {
+    "id": "evt_1768493986543_x4a2yf3",
+    "timestamp": "2025-12-14T08:05:08.000Z",
+    "direction": "in",
+    "confidence": 0.9,
+    "prey": false,
+    "imageFile": "evt_1768493986543_x4a2yf3.jpg",
+    "rawText": "in - No prey detected in - No prey detected in - No prey detected in - No prey detected\nDetected head Cropped ROI Detected head Cropped ROI Detected head Cropped ROL Detected head Cropped ROI\nGlobal Threshold Adaptive Threshold Combined Threshold Een ee a he - a ee -\nA. + (Nd — Bh. A [(\\_ A hess Sp din (Ed Globat Threshold EER Ee heat costes nia\nSebrned Threshold x2 Kernel Spencd Tnsks A. | A_\nCombined Threshold 2x2 Kernel Opened Image\n© J— Combined Threshold 2x2 Kernel Opened Image\n—_— © J — Combined Threshold 2x2 Kernel Opened Image\nOpened Image 3x3 Kernel Dilated Image [+ ©) —_—\nOpened Image 3x3 Kernel Dilated Image\nBH = — Opened Image 3x3 Kernel Dilated Image\n— fan) Opened Image 3x3 Kernel Dilated Image\nRe-Inverted Contours HH — + —\nRe-Inverted Contours\nRe-Inverted Contours\nho ha g |"
+  },
+  {
+    "id": "evt_1768493984225_ncqgm8m",
+    "timestamp": "2025-12-15T18:23:49.000Z",
+    "direction": "in",
+    "confidence": 0.9,
+    "prey": false,
+    "imageFile": "evt_1768493984225_ncqgm8m.jpg",
+    "rawText": "in - No prey detected in - No prey detected in - No prey detected in - No prey detected\nDetected head Cropped ROI Detected head Cropped ROI Detected head Cropped ROI Detected head Cropped ROI\nGlobal Threshold Adaptive Threshold Combined Threshold Global Threshold Peapeive hbesbold Combined! Threshold = =\nAh. } [ — Ah. A ; [5] == A lel fear: Fetipiehon Tuba GLE ARCERAL i i RTE Eue Thueshotd re eA\ncombined Thkeshoty 2HzileineL petied Tee Conbined Threshold 2x2 Kernel Opened Inage A = A Ao [C_] A\n(©) — Combined Threshold 2x2 Kernel Opened Image\n— [0] [+ — Combined Threshold 2x2 Kernel Opened Image\nOpened Image 3x3 Kernel Dilated Image HH o —\nOpened Image 3x3 Kernel Dilated Image\néb — — Opened Image 3x3 Kernel Dilated Image\n— ®D Opened Image 3x3 Kernel Dilated Image\nRe-Inverted Contours & —\nRe-Inverted Contours ba\nhh \" wo\nA A [ | §"
+  },
+  {
+    "id": "evt_1768493981838_uauyjpe",
+    "timestamp": "2025-12-17T04:48:28.000Z",
+    "direction": "out",
+    "confidence": 0.9,
+    "prey": false,
+    "imageFile": "evt_1768493981838_uauyjpe.jpg",
+    "rawText": "out - Skipped prey detection out - Skipped prey detection out - Skipped prey detection out - Skipped prey detection\nDetected head Cropped Detected head Cropped | Detected head Cropped | Detected head Cropped |"
+  },
+  {
+    "id": "evt_1768493980630_8sc7b8t",
+    "timestamp": "2025-12-17T05:46:34.000Z",
+    "direction": "in",
+    "confidence": 0.9,
+    "prey": false,
+    "imageFile": "evt_1768493980630_8sc7b8t.jpg",
+    "rawText": "in - No prey detected in - No prey detected in - No prey detected in - No prey detected\nDetected head Cropped ROL Detected head Cropped ROL Detected head Cropped ROL Detected head Cropped ROL\nGlobal Threshold Adaptive Threshold Combined Threshold L =\nA | A A _ - A Global Threshold Adaptive Threshold Combined Threshold Global Threshold Adaptive Threshold Combined Threshold\nCombined Threshold 2x2 Kernel Opened Inage EE EE ET Shea Thge A N= A _ Aho NE Ah\nBh o A. A A Combined Threshold 2x2 Kernel Opened Image Combined Threshold 2x2 Kernel Opened Image\nOpened Inage 3x3 Kernel Dilated Inage Spéncdlnage eral ised ange A A Ao ho\nA [$3] HH ps) A. A fast HH A Opened Image 3x3 Kernel Dilated Image Opened Image 3x3 Kernel Dilated Image\nReload Setois Re-Inverted Contours A 1] Ah ho ia hh\nBn _ BB _ A - Te i Bnew Pe"
+  },
+  {
+    "id": "evt_1768493978107_atyvbiu",
+    "timestamp": "2025-12-18T22:30:43.000Z",
+    "direction": "in",
+    "confidence": 0.9,
+    "prey": false,
+    "imageFile": "evt_1768493978107_atyvbiu.jpg",
+    "rawText": "in - No prey detected in - No prey detected in - No prey detected in - No prey detected\nDetected head Cropped ROI Detected head Cropped ROI Detected head Cropped ROI Detected head Cropped ROI\nSlcballhreshold edb oh Combined Threshold global Threshold Adaptive Threshold Combined Threshold - -\n} |_|] A [Ss] A Global Threshold Adaptive Threshold Combined Threshold Global Threshold Re Theeahald Chase Arora\nCoss ned) Threshold Gazemet geered: Ings Combined Threshold 2x2 Kernel Opened Inage A. | A A [| A _\nA. °° hh. A ° [1] = A Soman ni TT rrr ME sos\nOpened Image 3x3 Kernel Dilated Image [+ o —\n* * Seencdiinage Sidi Liated Tnage A. ho A H A\n— — ed Image 3x3 Kernel Dilated Image\nBo A Lh _% 1 bh i — lL\nRATT bla © = fo) —\nRe-Inverted Contours -—\n- - A. Be N “@\nho Ba L E"
+  },
+  {
+    "id": "evt_1768493975507_xzgldp3",
+    "timestamp": "2025-12-19T23:20:55.000Z",
+    "direction": "in",
+    "confidence": 0.9,
+    "prey": false,
+    "imageFile": "evt_1768493975507_xzgldp3.jpg",
+    "rawText": "in - No prey detected in - No prey detected in - No prey detected in - No prey detected\nDetected head Cropped ROI Detected head Cropped ROI Detected head Cropped ROI Detected head Cropped ROI\nGlobal: Threshold (AdspEivetThieshold Conbined: Threshold Global Threshold Adaptive Threshold Combined Threshold iat R Fr a =\nBh. } |] — Bh A _ A aL hres) lapEive. Threshol dl res) Global Threshold Adaptive Threshold Combined Threshold\nConbified Threshold 22 Kernel Opened Inge A. | A\nCombined Threshold 2x2 Kernel Opened Image\n©) — Combined Threshold 2x2 Kernel Opened Image\n= A o Bs —_ Combined Threshold 242 Kernel Opened Inage\n- ie J— A. HH] A © is =\nOpened Image 3x3 Kernel Dilated Image\n— Opened Image 3x3 Kernel Dilated Image\nHH — fa} Opened Image 3x3 Kernel Dilated Image\nBan FH & ¥\nRe-Inverted Contours\nRe-Inverted Contours\nGP ho { [4"
+  },
+  {
+    "id": "evt_1768493973216_vroi43p",
+    "timestamp": "2025-12-20T15:17:14.000Z",
+    "direction": "out",
+    "confidence": 0.9,
+    "prey": false,
+    "imageFile": "evt_1768493973216_vroi43p.jpg",
+    "rawText": "out - Skipped prey detection out - Skipped prey detection out - Skipped prey detection out - Skipped prey detection\nDetected head Cropped F Detected head Cropped ROI Detected head Cropped ROI Detected head Cropped ROI"
+  },
+  {
+    "id": "evt_1768493971893_k74z0xa",
+    "timestamp": "2025-12-20T15:51:40.000Z",
+    "direction": "in",
+    "confidence": 0.9,
+    "prey": false,
+    "imageFile": "evt_1768493971893_k74z0xa.jpg",
+    "rawText": "in - No prey detected in - No prey detected in - No prey detected in - No prey detected\nDetected head Cropped ROI Detected head Cropped ROI Detected head Cropped ROI Detected head Cropped ROL\nGlobal Threshold Adaptive Threshold Conbined Threshold - - -\nA EE A Global Threshold Adaptive Threshold Combined Threshold Global Threshold Adaptive Threshold Combined Threshold Global Threshold Adaptive Threshold Combined Threshold\nCombined Threshold 2x2 Kernel Opened Image hao BE ho Aha L_ Ah. Aha N= A\nAh 0 m= - Ah. Conbined Threshold 2x2 Kernel Opened Inage Conbined Threshold 2x2 Kernel Opened Inage Conbined Threshold Saari opengl Taga\nCpened’ nage SE oiated Tnage ho LH ha hao LH ha Aha i= hao\na a ha HH ha ha D HH hw ha D FH ha\n@ Bh on -. - on -.on - a “a"
+  },
+  {
+    "id": "evt_1768493969593_4dshbc5",
+    "timestamp": "2025-12-20T16:02:24.000Z",
+    "direction": "out",
+    "confidence": 0.9,
+    "prey": false,
+    "imageFile": "evt_1768493969593_4dshbc5.jpg",
+    "rawText": "out - Skipped prey detection out - Skipped prey detection out - Skipped prey detection out - Skipped prey detection\nDetected head Cropped ROI Detected head Cropped ROI Detected head Cropped ROI Detected head Cropped ROI"
+  },
+  {
+    "id": "evt_1768493968355_e6718ju",
+    "timestamp": "2025-12-20T16:18:26.000Z",
+    "direction": "in",
+    "confidence": 0.9,
+    "prey": false,
+    "imageFile": "evt_1768493968355_e6718ju.jpg",
+    "rawText": "in - No prey detected in - No prey detected in - No prey detected in - No prey detected\nDetected head Cropped ROI Detected head Cropped ROI Detected head Cropped ROI Detected head Cropped ROI\nA Threshold =. Jhireshold | hreshotd Global Threshold Adaptive Threshold Combined Threshold Global Threshold Adaptive Threshold Combined Threshold Global Threshold Adaptive Threshold Combined Threshold\nCombined Threshold 2x2 Kernel in Aha [\\_] hob ao NS hab o S_] Ao\nombined Thresho Ee bE ESE) EP aT Svsiiarrel Gime ie Combined Threshold 2x2 Kernel Opened Image Combined Threshold 2x2 Kernel Opened Image\nOpened Image 3x3 Kernel Dilated Image ho ha ha ha hao ha\nAho aD EE ho Opened Image 3x3 Kernel Dilated Image Pn 3x3 Kernel ha Opened Image 3x3 Kernel Dilated Image\nRe-Inverted Contours ha FH ha ha HH ho\nPu ee { L [ > . [ -"
+  },
+  {
+    "id": "evt_1768493966017_abognr5",
+    "timestamp": "2025-12-21T10:51:36.000Z",
+    "direction": "in",
+    "confidence": 0.9,
+    "prey": false,
+    "imageFile": "evt_1768493966017_abognr5.jpg",
+    "rawText": "in - No prey detected in - No prey detected in - No prey detected in - No prey detected\nDetected head Cropped ROI Detected head Cropped ROI Detected head Cropped ROI Detected head Cropped ROI\nGlobal Threshold Adaptive Threshold Combined Threshold - - -\n~ Global Threshold Adaptive Threshold Combined Threshold\nAh [ — A Global Threshold Adaptive Threshold Combined Threshold Global Threshold Fe aREe hiesheld Combined: Threshold Lo S_ Lo\nCombined Threshold 2x2 Kernel Opened Image Ao |] A. Aho = @\nCombined Threshold 2x2 Kernel Opened Image GantineagTncnolLd Ze LEE rence sD)\n©) [+ — Combined Threshold 2x2 Kernel Opened Image Ao o Tl Ao\nReensdilipes Jx3Kemet. DilEted pes Aha ha BB\nOpened Image 3x3 Kernel Dilated Image\n— Opened Image 3x3 Kernel Dilated Image\n= fo) Opened Image 3x3 Kernel Dilated Image Ao & HH — A\nRe-Inverted Contours HH & —\nRe-Inverted Contours\nRe-Inverted Contours\nA A - a = .>o-"
+  },
+  {
+    "id": "evt_1768493963590_ab5ot61",
+    "timestamp": "2025-12-21T15:22:21.000Z",
+    "direction": "in",
+    "confidence": 0.9,
+    "prey": false,
+    "imageFile": "evt_1768493963590_ab5ot61.jpg",
+    "rawText": "in - No prey detected in - No prey detected in - No prey detected in - No prey detected\nDetected head Cropped ROI Detected head Cropped ROI Detected head Cropped ROI Detected head Cropped ROI\nGlobal Threshold Adaptive Threshold Combined Threshold L\nGlobal Threshold Adaptive Threshold Combined Threshold\n+ — } — Global Threshold Adaptive Threshold Conbined Threshold Global Threshold PR eEneite Thkeshold Combined! Threshold\nCombined Threshold 2x2 Kernel Opened Image + — + —\nA 0 a= — A Combined Threshold 2x2 Kernel Opened Image\n[+ — Combined Threshold 2x2 Kernel Opened Image ERD ned Threshold 272 Karnal Opened Image\nOpened Image 3x3 Kernel Dilated Image o\nhh © it = hh BR & w— U - A. ° = - A\nRe-Inverted Contours Opened Image 3x3 Kernel Dilated Image\nOpened Image 3x3 Kernel Dilated Image\nhb. g Rh Ah i on B A A 4 is = A\n@ Bh Re-Theerted Contours\nNH A Bh L 2"
+  },
+  {
+    "id": "evt_1768493961164_j6t4b4s",
+    "timestamp": "2025-12-22T00:20:11.000Z",
+    "direction": "out",
+    "confidence": 0.9,
+    "prey": false,
+    "imageFile": "evt_1768493961164_j6t4b4s.jpg",
+    "rawText": "out - Skipped prey detection out - Skipped prey detection out - Skipped prey detection out - Skipped prey detection\nDetected head Cropped | Detected head Cropped | Detected head Cropped RO] Detected head Cropped ROI"
+  },
+  {
+    "id": "evt_1768493959909_acjk74m",
+    "timestamp": "2025-12-22T00:37:51.000Z",
+    "direction": "in",
+    "confidence": 0.9,
+    "prey": false,
+    "imageFile": "evt_1768493959909_acjk74m.jpg",
+    "rawText": "in - No prey detected in - No prey detected in - No prey detected in - No prey detected\n\nDetected head Cropped ROL Detected head Cropped ROI Detected head Cropped ROI Detected head Cropped ROI\nGlobal Threshold Adaptive Threshold Combined Threshold Global Threshold Adaptive Threshold Combined Threshold Global Threshold Adaptive Threshold Combined Threshold Global Threshold Adaptive Threshold Combined: hkeshold\nA REEL A. Combined Threshold 2x2 Kernel Opened Inage Combined Threshold 2x2 Kernel Opened nage Ted To Ererar ee\nOPTRA a Ered Tage ha ha ha ha gy Aha\nA. or A Opened Image 3x3 Kernel Dilated Inage Opened Image 3x3 Kernel Dilated Image Spaneal nage ket Diiafed Tage\n\nRe-Inverted Contours ha hs ha hs ha HH he\n\n\\ a Re-Inverted Contours Re-Inverted Contours eta rs"
+  },
+  {
+    "id": "evt_1768493957600_emep893",
+    "timestamp": "2025-12-22T10:06:20.000Z",
+    "direction": "in",
+    "confidence": 0.9,
+    "prey": false,
+    "imageFile": "evt_1768493957600_emep893.jpg",
+    "rawText": "in - No prey detected in - No prey detected in - No prey detected in - No prey detected\nDetected head Cropped ROI Detected head Cropped ROI Detected head Cropped ROI Detected head Cropped ROI\nGlobal Threshold Adaptive Threshold Combined Threshold - - -\nA [S_- A Global Threshold Adaptive Threshold Combined Threshold Global Threshold Adaptive Threshold Gokbined: Threshold Global Threshold Adaptive Threshold Combined Threshold\nCombined Threshold 2x2 Kernel Opened Image Aho \\_] Ah A L_ Kk Aha <A A\nA s A Combined Threshold 2x2 Kernel Opened Inage EE TE dT Combined Threshold 2x2 Kernel Opened Inage\nOpened Image 3x3 Kernel Dilated Image Aho ha GP RR A Ao ho\na ned Image 3x3 Kernel Dilated Image ned Image 3x3 Kernel Dilated Image\nAo aD +H Ao TE : TT sat mC s\nke Tnvensed Contours haa is ha Ao i PF ha +H ho\nRe-Inverted Contours Re-Inverted Contours\nGP .o [ L b= ha"
+  },
+  {
+    "id": "evt_1768493954880_rsy3wlq",
+    "timestamp": "2025-12-22T20:05:29.000Z",
+    "direction": "in",
+    "confidence": 0.9,
+    "prey": false,
+    "imageFile": "evt_1768493954880_rsy3wlq.jpg",
+    "rawText": "in - No prey detected in - No prey detected in - No prey detected in - No prey detected\nDetected head Cropped ROI Detected head Cropped ROI Detected head Cropped ROI Detected head Cropped ROI\nGlobal Threshold Adaptive Threshold Combined Threshold - - -\nGlobal Threshold Adaptive Threshold Combined Threshold i\nA A] A IF Global Threshold eEp EINE Theshold Combined Threshold Global Threshold Adaptive Threshold Combined Threshold\nCombined Threshold 2x2 Kernel Opened Image ho \\ ho Aho [&_-1 @ he _] ho\nfo) — Eambg ne gTge RI Ei Epeneafilongs) Combined Threshold 2x2 Kernel Opened Image\n[+ = 0 Combined Threshold 2x2 Kernel Opened Image\nSeen Se pilated Tnsge H] GP HH] he\n& = Opened Image 3x3 Kernel Dilated Image EE TEE\néb —_ Opened Image 3x3 Kernel Dilated Image fas)\nRe-tnvertas contours éb +H = HH\nRe-Inverted Contours Res Tvarted Cental\nhn = [ EL b= -.o="
+  },
+  {
+    "id": "evt_1768493952331_30kg38k",
+    "timestamp": "2025-12-23T14:31:26.000Z",
+    "direction": "in",
+    "confidence": 0.9,
+    "prey": false,
+    "imageFile": "evt_1768493952331_30kg38k.jpg",
+    "rawText": "in - No prey detected in - No prey detected in - No prey detected in - No prey detected\n\nDetected head Cropped ROI Detected head Cropped ROI Detected head Cropped ROI Detected head Cropped ROI\n\n- - - Global Threshold Adaptive Threshold Combined Threshold\nGlobal Threshold Adaptive Threshold Combined Threshold Global Threshold Adaptive Threshold Combined Threshold Global Threshold AAnabe Threshold Combined Theetroia Gi < A 2\nhe Eo he he [Seo] he he [| - Combined Threshold 2x2 Kernel Opened Image\nCombined Threshold 2x2 Kernel Opened Image Combined Threshold 2x2 Kernel Opened Image (etree Tele aval Kemel Opened Image A. 1] Ah\nhe he A he A. =n he Opened Image 3x3 Kernel Dilated Image\nOpened Image 3x3 Kernel Dilated Image Opened Image 3x3 Kernel Dilated Image OetadiTrage Sa Kara DAlBtad nage Ah of HH he\nhe HH — he it -— he HH hn Re-Inverted Contours\n\nuu a. - — Co Cw Gu."
+  },
+  {
+    "id": "evt_1768493949926_3yb2hbz",
+    "timestamp": "2025-12-23T15:11:22.000Z",
+    "direction": "in",
+    "confidence": 0.9,
+    "prey": false,
+    "imageFile": "evt_1768493949926_3yb2hbz.jpg",
+    "rawText": "in - No prey detected in - No prey detected in - No prey detected in - No prey detected\n\nDetected head Cropped ROL Detected head Cropped ROI Detected head Cropped ROI Detected head Cropped ROI\nGlobal Threshold Adaptive Threshold Conbined Threshold b, . - -\nA [ A Global Threshold Adaptive Threshold Combined Threshold Global: Threshold Adaptive Threshold Gti reeds Tha Bell Global Threshold Adaptive Threshold Combined Threshold\nCombined Threshold 2x2 Kernel Opened Image ho NE ho Ae (.- A ha [Se ho\nA 0 a= — A conbineduhreshotd 22 Katnat Openediinage Combined Threshold 2x2 Kernel Opened Image Conbrined Threshold 2x2 Kernel Opened Image\nFL — ois ales  — he he Ao LH Aho he LL hs\n\nned Image 3x3 Kernel Dilated Inage\n\nAh aD iE = A ged tei 5 Giisadiings — itaced taage pened nage 20 Korn orisces Tusge\n\n\" im ha EE he Aho HH ho ha HH oF\n\nRe-Tnverted Contours\nho h gu . [ L LJ -_"
+  },
+  {
+    "id": "evt_1768493947437_v06isso",
+    "timestamp": "2025-12-24T10:46:39.000Z",
+    "direction": "out",
+    "confidence": 0.9,
+    "prey": false,
+    "imageFile": "evt_1768493947437_v06isso.jpg",
+    "rawText": "out - Skipped prey detection out - Skipped prey detection out - Skipped prey detection out - Skipped prey detection\nDetected head Cropped ROI Detected head Cropped ROI Detected head Cropped ROI Detected head Cropped ROI"
+  },
+  {
+    "id": "evt_1768493946250_n774661",
+    "timestamp": "2025-12-24T11:00:58.000Z",
+    "direction": "invalid",
+    "confidence": 0,
+    "prey": false,
+    "imageFile": "evt_1768493946250_n774661.jpg",
+    "rawText": "in - No prey detected in - No prey detected in - No prey detected unknown - No prey detected\n\nDetected head Cropped ROI Detected head Cropped ROI Detected head Cropped ROI Detected head Cropped ROI\n\n- » - Global Threshold Adaptive Threshold Combined Threshold\nha + [-. | = ha he + Bl i he -—- | = —- _E pe mm\nCombined Threshold 2x2 Kernel Opened Inage Combined Threshold 2x2 Kernel Opened Tnage Gontiifed Threshold AxiKermel Opened Tage: at o = — -\nhe ° is ha he ° i= = he - = H = o> p— mi —\nSeren —alKernat Ditad Tags Opened Image 3x3 Kernel Dilated Image OpenediTmaps SEE DEVEtEd BEES Dt gE >\nhe ® is . he ® HH hn De © Hi = Mt - _]\n\n- - 3 - - —~ a"
+  },
+  {
+    "id": "evt_1768493943796_knotrxy",
+    "timestamp": "2025-12-25T00:35:45.000Z",
+    "direction": "in",
+    "confidence": 0.9,
+    "prey": false,
+    "imageFile": "evt_1768493943796_knotrxy.jpg",
+    "rawText": "in - No prey detected in - No prey detected in - No prey detected in - No prey detected\n— -~ — La I Le — —-—\nDetected head Cropped ROI Detected head Cropped ROI Detected head Cropped ROI Detected head Cropped ROI\nGlobal Threshold Adaptive Threshold Combined Threshold Global Threshold Adaptive Threshold Combined Threshold Global Threshold Adaptive Threshold Combined Threshold Global Threshold Adaptive Threshold Combined Threshold\nCombined Threshold 2x2 Kernel Opened Image Combined Threshold 2x2 Kernel Opened Image Combined Threshold 2x2 Kernel Opened Image Combined Threshold 2x2 Kernel Opened Image\nOpened Image 3x3 Kernel Dilated Image Opened Image 3x3 Kernel Dilated Image Opened Image 3x3 Kernel Dilated Image Opened Image 3x3 Kernel Dilated Image\nRe-Inverted Contours Re-Inverted Contours Re-Inverted Contours Re-Inverted Contours\na a _ 1\n-— i a a_i\npm me | —— .\np— _— - ) all"
+  },
+  {
+    "id": "evt_1768493941437_wjid1zj",
+    "timestamp": "2025-12-26T04:18:10.000Z",
+    "direction": "out",
+    "confidence": 0.9,
+    "prey": false,
+    "imageFile": "evt_1768493941437_wjid1zj.jpg",
+    "rawText": "out - Skipped prey detection out - Skipped prey detection out - Skipped prey detection out - Skipped prey detection\nDetected head Cropped Detected head Cropped F Detected head Cropped Detected head Cropped F"
+  },
+  {
+    "id": "evt_1768493940305_d7bssf7",
+    "timestamp": "2025-12-26T04:48:18.000Z",
+    "direction": "in",
+    "confidence": 0.9,
+    "prey": false,
+    "imageFile": "evt_1768493940305_d7bssf7.jpg",
+    "rawText": "in - No prey detected in - No prey detected in - No prey detected in - No prey detected\n\nDetected head Cropped ROI Detected head Cropped ROI Detected head Cropped ROI Detected head Cropped ROI\nGlobal Threshold Adaptive Threshold Combined Threshold - - -.\nBh. [| | Bh. Global Threshold Adaptive Threshold Combined Threshold Global Threshold Adaptive Threshold Combined Threshold Global Threshold Adaptive Threshold Combined Threshold\nCombined Threshold 2x2 Kernel Opened Image A | _ g Aho NA A ha (\\- Ah\nBh. fe) = —_— A. Combined Threshold 2x2 Kernel Opened Image Combined Threshold 2x2 Kernel Opened Image Combined Threshold 2x2 Kernel Opened Image\nJ— Ee a A HH] A Aha HH] ha Aho ho\nA. aD EE = Ah. aaa aera: Diced Tnsge pened Tones 20 Kerner Dated Tnmge ned Tones 20 fern Dilated Tose\n\n“ -— Ah. a Ah ha HH ha ha HH ho\n\n@ Be NN re Ul & ou - -"
+  },
+  {
+    "id": "evt_1768493937706_uxa99sn",
+    "timestamp": "2025-12-27T11:51:07.000Z",
+    "direction": "in",
+    "confidence": 0.9,
+    "prey": false,
+    "imageFile": "evt_1768493937706_uxa99sn.jpg",
+    "rawText": "in - No prey detected in - No prey detected in - No prey detected in - No prey detected\nDetected head Cropped ROI Detected head Cropped ROI Detected head Cropped ROI Detected head Cropped ROI\nGlobal Threshold Adaptive Threshold Combined Threshold = - =\nA NA] A Global Threshold Adaptive Threshold Combined Threshold Global Threshold eEDEINe Theshold Combined Threshold Global Threshold Adaptive Threshold Combined Threshold\nCombined Threshold 2x2 Kernel Opened Image hw _ ho A f_ @ Ah _ Ah.\nCombined Threshold 2x2 Kernel Opened Image Combined Threshold 2x2 Kernel Opened Image\n(@] [+ — Combined Threshold 2x2 Kernel Opened Image\nOpencdiTage 2aikemat Dilated rage ho he A 1 GG Ah A\n— Opened Image 3x3 Kernel Dilated Image Opened Image 3x3 Kernel Dilated Image\n— aD Opened Image 3x3 Kernel Dilated Image aD\nRe-Inverted Contours Re-Inverted Contours\nPu [ 9 Pua"
+  },
+  {
+    "id": "evt_1768493935189_v82d4il",
+    "timestamp": "2025-12-27T14:40:35.000Z",
+    "direction": "in",
+    "confidence": 0.9,
+    "prey": false,
+    "imageFile": "evt_1768493935189_v82d4il.jpg",
+    "rawText": "in - No prey detected in - No prey detected in - No prey detected in - No prey detected\nDetected head Cropped ROI Detected head Cropped ROI Detected head Cropped ROI Detected head Cropped ROI\ng ] A Global Threshold Adaptive Threshold Combined Threshold Global Threshold Adaptive Threshold Combined Threshold Global Threshold Adaptive Threshold Combined Threshold\n1 Ti Opensd/hage 3 A [* A A [\\ A\nA A. A hreshol x2 Kernel A Tnage Combined Threshold 242 Kernel Opened Inage Combined Threshold 242 Kernel Opened Inage\nOpened Image 3x3 Kernel Dilated Image SRATEEE ket CE A Ah A A\nA. fas) HH Ah. A A Opened Image 3x3 Kernel Dilated Image Opened Image 3x3 Kernel Dilated Image\nRe-Inverted Contours Pie rr A ] Ah Ah iit ho\nu u @ U R kh L 9"
+  },
+  {
+    "id": "evt_1768493932858_dagyu7l",
+    "timestamp": "2025-12-28T18:03:58.000Z",
+    "direction": "in",
+    "confidence": 0.9,
+    "prey": false,
+    "imageFile": "evt_1768493932858_dagyu7l.jpg",
+    "rawText": "in - No prey detected in - No prey detected in - No prey detected in - No prey detected\n\n| | |\n\n| | |\n\nDetected head Cropped ROI Detected head Cropped ROI Detected head Cropped ROI Detected head Cropped ROI\nGlobal Threshold Adaptive Threshold Combined Threshold - -\n\nGlobal Threshold Adaptive Threshold Combined Threshold\nA } [J] — A K [C Kk Global Threshold Adaptive Threshold Conbrined Threshold Global Threshold Adaptive Threshold Conbrined Threshold\nCombined Threshold 2x2 Kernel Opened Image\nCombined Threshold 2x2 Kernel Opened Image\n(©) [+ = o = Combined Threshold 2x2 Kernel Opened Image Centred AnrsaRold 2303 KErnas Opened Image\n\nSRE 56 Kernel Dilated Tage © H = m= =\n\n+ — Opened Image 3x3 Kernel Dilated Image\n\néb f= Opened Image 3x3 Kernel Dilated Image Opened Image 3x3 Kernel Dilated Image\nRe-Inverted Contours éb a & —_—\nA ‘ a\ni \\ Re-Inverted Contours EE e sed leaning\ni 4\nau - a\npe— P= - -\n| J | 3 | .\n| \\ | |\nill |"
+  },
+  {
+    "id": "evt_1768493930269_2dcln0j",
+    "timestamp": "2025-12-29T11:35:54.000Z",
+    "direction": "in",
+    "confidence": 0.9,
+    "prey": true,
+    "imageFile": "evt_1768493930269_2dcln0j.jpg",
+    "rawText": "in - No prey detected in - Prey detected in - Prey detected in - No cat head detected\nDetected head Cropped ROI Detected head Cropped ROI Detected head Cropped ROI\nGlobal Threshold Adaptive Threshold Combined Threshold I »\nBR CC gg cpr RT teen Te tT sient Global Threshold Adaptive Threshold Combined Threshold\nCy Sat Cy 9 CL  q A A gq\n— Combined Threshold 2x2 Kernel Opened Image\n(8) [+] == Combined Threshold 2x2 Kernel Opened Image\nSo Inge 2 ones fated Image @ a  @ A Ll A |\n(<5) Re: Opened Image 3x3 Kernel Dilated Image\n_— Opened Image 3x3 Kernel Dilated Image fas)\nLo BE @ H i Bh | iH\nRe-Inverted Contours\nK I L Lk _"
+  },
+  {
+    "id": "evt_1768493928165_mi05hkc",
+    "timestamp": "2025-12-29T15:22:45.000Z",
+    "direction": "invalid",
+    "confidence": 0,
+    "prey": false,
+    "imageFile": "evt_1768493928165_mi05hkc.jpg",
+    "rawText": "in - No cat head detected in - No cat head detected in - No prey detected in - No prey detected\nDetected head Cropped ROI Detected head Cropped ROI\nGlobal Threshold Adaptive Threshold Combined Threshold Global Threshold Adaptive Threshold Combined Threshold\nCombined Threshold 2x2 Kernel Opened Image Combined Threshold 2x2 Kernel Opened Image\n- o H = - A [¢] [1] = -\nOpened Image 3x3 Kernel Dilated Image Opened Image 3x3 Kernel Dilated Image\nRe-Inverted Contours Re-Inverted Contour:"
+  },
+  {
+    "id": "evt_1768493926495_pyg8o94",
+    "timestamp": "2025-12-29T16:41:00.000Z",
+    "direction": "invalid",
+    "confidence": 0,
+    "prey": false,
+    "imageFile": "evt_1768493926495_pyg8o94.jpg",
+    "rawText": "in - No cat head detected in - No cat head detected in - No cat head detected in - No prey detected\nDetected head Cropped |\nGlobal Threshold Adaptive Threshold Combined Threshold\nCombined Threshold 2x2 Kernel Opened Image\nvn = li\nOpened Image 3x3 Kernel Dilated Image\nRe-Inverted Con’"
+  },
+  {
+    "id": "evt_1768493920123_gt9kwlw",
+    "timestamp": "2025-12-29T16:48:12.000Z",
+    "direction": "invalid",
+    "confidence": 0,
+    "prey": false,
+    "imageFile": "evt_1768493920123_gt9kwlw.jpg",
+    "rawText": "in - No cat head detected in - No cat head detected in - No cat head detected in - No cat head detected"
+  },
+  {
+    "id": "evt_1768493919079_olbejlz",
+    "timestamp": "2025-12-29T16:48:38.000Z",
+    "direction": "invalid",
+    "confidence": 0,
+    "prey": false,
+    "imageFile": "evt_1768493919079_olbejlz.jpg",
+    "rawText": "in - No cat head detected in - No cat head detected in - No cat head detected in - No cat head detected"
+  },
+  {
+    "id": "evt_1768493918015_fa1ctcs",
+    "timestamp": "2025-12-29T16:49:01.000Z",
+    "direction": "invalid",
+    "confidence": 0,
+    "prey": false,
+    "imageFile": "evt_1768493918015_fa1ctcs.jpg",
+    "rawText": "in - No cat head detected in - No cat head detected in - No cat head detected in - No cat head detected"
+  },
+  {
+    "id": "evt_1768493916979_irny9ww",
+    "timestamp": "2025-12-29T16:49:39.000Z",
+    "direction": "invalid",
+    "confidence": 0,
+    "prey": false,
+    "imageFile": "evt_1768493916979_irny9ww.jpg",
+    "rawText": "in - No cat head detected in - No cat head detected in - No cat head detected in - No cat head detected"
+  },
+  {
+    "id": "evt_1768493916005_aypxxdp",
+    "timestamp": "2025-12-29T16:50:14.000Z",
+    "direction": "invalid",
+    "confidence": 0,
+    "prey": false,
+    "imageFile": "evt_1768493916005_aypxxdp.jpg",
+    "rawText": "in - No cat head detected in - No cat head detected in - No cat head detected in - No cat head detected"
+  },
+  {
+    "id": "evt_1768493914948_lfrp7bq",
+    "timestamp": "2025-12-29T16:50:46.000Z",
+    "direction": "invalid",
+    "confidence": 0,
+    "prey": false,
+    "imageFile": "evt_1768493914948_lfrp7bq.jpg",
+    "rawText": "in - No cat head detected in - No cat head detected in - No cat head detected in - No cat head detected"
+  },
+  {
+    "id": "evt_1768493913876_ox1a7o4",
+    "timestamp": "2025-12-29T16:51:16.000Z",
+    "direction": "invalid",
+    "confidence": 0,
+    "prey": false,
+    "imageFile": "evt_1768493913876_ox1a7o4.jpg",
+    "rawText": "in - No cat head detected in - No cat head detected in - No cat head detected in - No cat head detected"
+  },
+  {
+    "id": "evt_1768493912845_q6zqnlg",
+    "timestamp": "2025-12-29T16:51:46.000Z",
+    "direction": "invalid",
+    "confidence": 0,
+    "prey": false,
+    "imageFile": "evt_1768493912845_q6zqnlg.jpg",
+    "rawText": "in - No cat head detected in - No cat head detected in - No cat head detected in - No cat head detected"
+  },
+  {
+    "id": "evt_1768493911938_sejgr6r",
+    "timestamp": "2025-12-29T16:52:17.000Z",
+    "direction": "invalid",
+    "confidence": 0,
+    "prey": false,
+    "imageFile": "evt_1768493911938_sejgr6r.jpg",
+    "rawText": "in - No cat head detected in - No cat head detected in - No cat head detected in - No cat head detected"
+  },
+  {
+    "id": "evt_1768493910921_2vexc3d",
+    "timestamp": "2025-12-29T16:53:05.000Z",
+    "direction": "invalid",
+    "confidence": 0,
+    "prey": false,
+    "imageFile": "evt_1768493910921_2vexc3d.jpg",
+    "rawText": "in - No cat head detected in - No cat head detected in - No cat head detected in - No cat head detected"
+  },
+  {
+    "id": "evt_1768493909876_w4cnx7b",
+    "timestamp": "2025-12-29T16:53:26.000Z",
+    "direction": "invalid",
+    "confidence": 0,
+    "prey": false,
+    "imageFile": "evt_1768493909876_w4cnx7b.jpg",
+    "rawText": "in - No cat head detected in - No cat head detected in - No cat head detected in - No cat head detected"
+  },
+  {
+    "id": "evt_1768493908834_djd1165",
+    "timestamp": "2025-12-30T10:36:42.000Z",
+    "direction": "in",
+    "confidence": 0.9,
+    "prey": false,
+    "imageFile": "evt_1768493908834_djd1165.jpg",
+    "rawText": "in - No prey detected in - No prey detected in - No prey detected in - No prey detected\n\nDetected head Cropped ROI Detected head Cropped ROI Detected head Cropped ROI Detected head Cropped ROI\nB_ [_] Bo Global Threshold Adaptive Threshold Combined Threshold Global Threshold Abie Threshold Combined Threshold Global Threshold Adaptive Threshold Combined Threshold\nCombined Threshold 2x2 Kernel Obcred Gage A No Ah. A | A hh. SN] ho i\nB. h Combined Threshold 2x2 Kernel Opened Image Combined Threshold 2x2 Kernel Opened Image A Hhiéshiols 2x2 Kernel | i Tee:\nOpened Inage 3x3 Kernel Dilated Inage A A A Ah Tr Poy mE\nBh 4 ] Ah A I=t 1 A age 1 Ah. a he\n\nRe-Inverted Contours Ah ] Ah A HH Ah Pet hve sted Contours\n\nu - Q o A Bh ge ge"
+  },
+  {
+    "id": "evt_1768493906450_33tqe9w",
+    "timestamp": "2025-12-30T12:17:26.000Z",
+    "direction": "in",
+    "confidence": 0.9,
+    "prey": false,
+    "imageFile": "evt_1768493906450_33tqe9w.jpg",
+    "rawText": "in - No prey detected in - No prey detected in - No prey detected in - No prey detected\nDetected head Cropped ROI Detected head Cropped ROI Detected head Cropped ROL Detected head Cropped ROI\nAr pe a - - -\nchal Thyes| apLive: _ io A ned liges Global Threshold Adaptive Threshold Combined Threshold Global Threshold Adaptive Threshold Combined Threshold Global Threshold Adaptive Threshold Combined Threshold\nCombined Threshold 2x2 Kernel Opened Image Ah ES Ah hh [NM h ho NA ho\nAh. Bh. Combined Threshold 2x2 Kernel Opened Image Combined Threshold 2x2 Kernel Opened Image Combined Threshold 2x2 Kernel Opened Image\nOpened Image 3x3 Kernel Dilated Image A hh Ah ho ho hao\nBh. + EE Ah. Opened Image 3x3 Kernel Dilated Image Opened Image 3x3 Kernel Dilated Image Opened Image 3x3 Kernel Dilated Image\nRe-Tnverted Contours Ah iit hh ho. HH ho ha +H he\nBh _ Bh _ Re-Tnverted Contours Re-Tnverted Contours Re-Tnverted Contours"
+  }
+]

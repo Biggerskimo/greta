@@ -1,7 +1,25 @@
 import TelegramBot from "node-telegram-bot-api";
+import { writeFile, mkdir } from "fs/promises";
+import { existsSync } from "fs";
+import path from "path";
+import { fileURLToPath } from "url";
 import type { Config, PresenceEvent } from "./types.js";
 import { detectDirection, detectDirectionFullImage } from "./ocr.js";
 import { addEvent, generateEventId } from "./storage.js";
+
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
+const IMAGES_DIR = path.join(__dirname, "..", "images");
+
+async function saveImage(imageBuffer: Buffer, eventId: string): Promise<string> {
+  if (!existsSync(IMAGES_DIR)) {
+    await mkdir(IMAGES_DIR, { recursive: true });
+  }
+
+  const filename = `${eventId}.jpg`;
+  const filePath = path.join(IMAGES_DIR, filename);
+  await writeFile(filePath, imageBuffer);
+  return filename;
+}
 
 export function createBot(config: Config): TelegramBot {
   const bot = new TelegramBot(config.telegramBotToken, { polling: true });
@@ -38,27 +56,29 @@ export function createBot(config: Config): TelegramBot {
       // Try OCR with cropped region first
       let ocrResult = await detectDirection(imageBuffer, config);
 
-      // If cropping fails or confidence is low, try full image
-      if (!ocrResult.direction || ocrResult.confidence < 0.5) {
-        console.log("Cropped OCR failed, trying full image...");
+      // If invalid, try full image
+      if (ocrResult.direction === "invalid") {
+        console.log("Cropped OCR returned invalid, trying full image...");
         ocrResult = await detectDirectionFullImage(imageBuffer);
       }
 
-      console.log(`OCR result: direction=${ocrResult.direction}, confidence=${ocrResult.confidence.toFixed(2)}, text="${ocrResult.rawText}"`);
+      console.log(`OCR result: direction=${ocrResult.direction}, prey=${ocrResult.prey}, confidence=${ocrResult.confidence.toFixed(2)}`);
 
-      if (ocrResult.direction) {
-        const event: PresenceEvent = {
-          id: generateEventId(),
-          timestamp: new Date().toISOString(),
-          direction: ocrResult.direction,
-          confidence: ocrResult.confidence,
-        };
+      const eventId = generateEventId();
+      const imageFile = await saveImage(imageBuffer, eventId);
 
-        await addEvent(event);
-        console.log(`Recorded ${ocrResult.direction} event at ${event.timestamp}`);
-      } else {
-        console.log("Could not detect direction from image");
-      }
+      const event: PresenceEvent = {
+        id: eventId,
+        timestamp: new Date().toISOString(),
+        direction: ocrResult.direction,
+        confidence: ocrResult.confidence,
+        prey: ocrResult.prey,
+        imageFile,
+        rawText: ocrResult.rawText,
+      };
+
+      await addEvent(event);
+      console.log(`Recorded ${ocrResult.direction} event${ocrResult.prey ? ' (with prey)' : ''} at ${event.timestamp}`);
     } catch (error) {
       console.error("Error processing photo:", error);
     }

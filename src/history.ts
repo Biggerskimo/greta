@@ -12,6 +12,18 @@ import { addEvent, generateEventId, loadEvents } from "./storage.js";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const SESSION_FILE = path.join(__dirname, "..", "data", "session.txt");
+const IMAGES_DIR = path.join(__dirname, "..", "images");
+
+async function saveImage(imageBuffer: Buffer, eventId: string): Promise<string> {
+  if (!existsSync(IMAGES_DIR)) {
+    await mkdir(IMAGES_DIR, { recursive: true });
+  }
+
+  const filename = `${eventId}.jpg`;
+  const filePath = path.join(IMAGES_DIR, filename);
+  await writeFile(filePath, imageBuffer);
+  return filename;
+}
 
 async function loadSession(): Promise<string> {
   if (existsSync(SESSION_FILE)) {
@@ -125,27 +137,31 @@ export async function fetchHistory(
           // Run OCR
           let ocrResult = await detectDirection(buffer, config);
 
-          if (!ocrResult.direction || ocrResult.confidence < 0.5) {
+          if (ocrResult.direction === "invalid") {
             ocrResult = await detectDirectionFullImage(buffer);
           }
 
           console.log(
-            `OCR result: direction=${ocrResult.direction}, confidence=${ocrResult.confidence.toFixed(2)}`
+            `OCR result: direction=${ocrResult.direction}, prey=${ocrResult.prey}, confidence=${ocrResult.confidence.toFixed(2)}`
           );
 
-          if (ocrResult.direction) {
-            const event: PresenceEvent = {
-              id: generateEventId(),
-              timestamp,
-              direction: ocrResult.direction,
-              confidence: ocrResult.confidence,
-            };
+          const eventId = generateEventId();
+          const imageFile = await saveImage(buffer, eventId);
 
-            await addEvent(event);
-            existingTimestamps.add(timestamp);
-            eventsAdded++;
-            console.log(`Added ${ocrResult.direction} event at ${timestamp}`);
-          }
+          const event: PresenceEvent = {
+            id: eventId,
+            timestamp,
+            direction: ocrResult.direction,
+            confidence: ocrResult.confidence,
+            prey: ocrResult.prey,
+            imageFile,
+            rawText: ocrResult.rawText,
+          };
+
+          await addEvent(event);
+          existingTimestamps.add(timestamp);
+          eventsAdded++;
+          console.log(`Added ${ocrResult.direction} event${ocrResult.prey ? ' (with prey)' : ''} at ${timestamp}`);
         } catch (error) {
           console.error(`Error processing photo: ${error}`);
         }

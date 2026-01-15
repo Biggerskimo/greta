@@ -4,4 +4,5 @@ dist/
 data/events.json
 data/session.txt
 reports/*.html
+images/
 *.log

@@ -2,6 +2,7 @@ import "dotenv/config";
 import { createBot, stopBot } from "./telegram.js";
 import { generateReport } from "./report.js";
 import { fetchHistory } from "./history.js";
+import { rescanImages } from "./rescan.js";
 import type { Config } from "./types.js";
 
 function loadConfig(): Config {
@@ -109,6 +110,28 @@ async function runFetch(args: string[]): Promise<void> {
   console.log(`\nDone! Added ${eventsAdded} new events.`);
 }
 
+async function runRescan(args: string[]): Promise<void> {
+  const config = loadConfigForFetch();
+
+  let startDate: Date;
+  let endDate: Date;
+
+  const fromIndex = args.indexOf("--from");
+  const toIndex = args.indexOf("--to");
+
+  if (fromIndex !== -1 && toIndex !== -1) {
+    startDate = parseDate(args[fromIndex + 1]);
+    endDate = parseDate(args[toIndex + 1]);
+    endDate.setUTCHours(23, 59, 59, 999);
+  } else {
+    throw new Error("Rescan requires --from and --to dates");
+  }
+
+  console.log(`Rescanning images from ${startDate.toISOString()} to ${endDate.toISOString()}`);
+  const rescanned = await rescanImages(config, startDate, endDate);
+  console.log(`\nDone! Rescanned ${rescanned} images.`);
+}
+
 async function runBot(): Promise<void> {
   const config = loadConfig();
   const bot = createBot(config);
@@ -134,6 +157,8 @@ async function main(): Promise<void> {
     await runReport(args.slice(1));
   } else if (command === "fetch") {
     await runFetch(args.slice(1));
+  } else if (command === "rescan") {
+    await runRescan(args.slice(1));
   } else if (command === "help" || command === "--help" || command === "-h") {
     console.log(`
 Greta - Cat Presence Reporter
@@ -146,6 +171,8 @@ Usage:
   npm run fetch           Fetch historical data from Telegram (last 30 days)
   npm run fetch -- --from YYYY-MM-DD --to YYYY-MM-DD
                           Fetch historical data for custom date range
+  npm run rescan -- --from YYYY-MM-DD --to YYYY-MM-DD
+                          Re-scan saved images with updated OCR logic
 
 Setup for bot (real-time):
   1. Create a Telegram bot via @BotFather

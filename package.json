@@ -8,7 +8,8 @@
     "start": "node dist/index.js",
     "dev": "tsc && node dist/index.js",
     "report": "node dist/index.js report",
-    "fetch": "node dist/index.js fetch"
+    "fetch": "node dist/index.js fetch",
+    "rescan": "node dist/index.js rescan"
   },
   "keywords": [
     "cat",
