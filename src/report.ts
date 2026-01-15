@@ -68,12 +68,12 @@ function splitPeriodAcrossDays(period: PresencePeriod): Map<string, { state: str
   const endDate = new Date(period.end);
 
   let currentDate = new Date(startDate);
-  currentDate.setHours(0, 0, 0, 0);
+  currentDate.setUTCHours(0, 0, 0, 0);
 
   while (currentDate < endDate) {
     const dayStart = new Date(currentDate);
     const dayEnd = new Date(currentDate);
-    dayEnd.setDate(dayEnd.getDate() + 1);
+    dayEnd.setUTCDate(dayEnd.getUTCDate() + 1);
 
     // Calculate overlap between period and this day
     const overlapStart = startDate > dayStart ? startDate : dayStart;
@@ -90,7 +90,7 @@ function splitPeriodAcrossDays(period: PresencePeriod): Map<string, { state: str
       existing.hours += hoursInDay;
     }
 
-    currentDate.setDate(currentDate.getDate() + 1);
+    currentDate.setUTCDate(currentDate.getUTCDate() + 1);
   }
 
   return result;
@@ -111,14 +111,14 @@ function calculateDailyStats(
 
   // Initialize all days in the report range
   const currentDate = new Date(reportStartDate);
-  currentDate.setHours(0, 0, 0, 0);
+  currentDate.setUTCHours(0, 0, 0, 0);
   const endDate = new Date(reportEndDate);
-  endDate.setHours(23, 59, 59, 999);
+  endDate.setUTCHours(23, 59, 59, 999);
 
   while (currentDate <= endDate) {
     const dateKey = currentDate.toISOString().split("T")[0];
     dailyMap.set(dateKey, { events: [], hoursInside: 0, hoursOutside: 0, hoursUnknown: 0 });
-    currentDate.setDate(currentDate.getDate() + 1);
+    currentDate.setUTCDate(currentDate.getUTCDate() + 1);
   }
 
   // Group events by date

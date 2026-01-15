@@ -35,13 +35,13 @@ function parseDate(str: string): Date {
 
 function getWeekRange(): { start: Date; end: Date } {
   const now = new Date();
-  const dayOfWeek = now.getDay();
+  const dayOfWeek = now.getUTCDay();
   const start = new Date(now);
-  start.setDate(now.getDate() - dayOfWeek);
-  start.setHours(0, 0, 0, 0);
+  start.setUTCDate(now.getUTCDate() - dayOfWeek);
+  start.setUTCHours(0, 0, 0, 0);
 
   const end = new Date(now);
-  end.setHours(23, 59, 59, 999);
+  end.setUTCHours(23, 59, 59, 999);
 
   return { start, end };
 }
@@ -56,6 +56,7 @@ async function runReport(args: string[]): Promise<void> {
   if (fromIndex !== -1 && toIndex !== -1) {
     startDate = parseDate(args[fromIndex + 1]);
     endDate = parseDate(args[toIndex + 1]);
+    endDate.setUTCHours(23, 59, 59, 999);
   } else {
     const range = getWeekRange();
     startDate = range.start;
@@ -94,13 +95,13 @@ async function runFetch(args: string[]): Promise<void> {
   if (fromIndex !== -1 && toIndex !== -1) {
     startDate = parseDate(args[fromIndex + 1]);
     endDate = parseDate(args[toIndex + 1]);
-    endDate.setHours(23, 59, 59, 999);
+    endDate.setUTCHours(23, 59, 59, 999);
   } else {
     // Default to last 30 days
     endDate = new Date();
     startDate = new Date();
-    startDate.setDate(startDate.getDate() - 30);
-    startDate.setHours(0, 0, 0, 0);
+    startDate.setUTCDate(startDate.getUTCDate() - 30);
+    startDate.setUTCHours(0, 0, 0, 0);
   }
 
   console.log(`Fetching history from ${startDate.toISOString()} to ${endDate.toISOString()}`);
