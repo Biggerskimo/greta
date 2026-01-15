@@ -21,11 +21,21 @@ export interface OcrResult {
   rawText: string;
 }
 
+export interface PresencePeriod {
+  start: string;
+  end: string;
+  state: "inside" | "outside" | "unknown";
+  durationHours: number;
+}
+
 export interface ReportData {
   startDate: string;
   endDate: string;
   events: PresenceEvent[];
+  periods: PresencePeriod[];
   totalTimeInside: number;
+  totalTimeOutside: number;
+  totalTimeUnknown: number;
   totalEntries: number;
   totalExits: number;
   dailyStats: DailyStat[];
@@ -35,6 +45,8 @@ export interface ReportData {
 export interface DailyStat {
   date: string;
   hoursInside: number;
+  hoursOutside: number;
+  hoursUnknown: number;
   entries: number;
   exits: number;
 }

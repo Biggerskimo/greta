@@ -3,40 +3,158 @@ import { existsSync } from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
 import Handlebars from "handlebars";
-import type { PresenceEvent, ReportData, DailyStat, HourlyStat } from "./types.js";
+import type { PresenceEvent, ReportData, DailyStat, HourlyStat, PresencePeriod } from "./types.js";
 import { getEventsByDateRange } from "./storage.js";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const TEMPLATES_DIR = path.join(__dirname, "..", "templates");
 const REPORTS_DIR = path.join(__dirname, "..", "reports");
 
-function calculateTimeInside(events: PresenceEvent[]): number {
-  let totalMs = 0;
-  let lastInTime: Date | null = null;
+function calculatePresencePeriods(events: PresenceEvent[]): PresencePeriod[] {
+  const periods: PresencePeriod[] = [];
 
-  for (const event of events) {
-    const eventTime = new Date(event.timestamp);
+  for (let i = 0; i < events.length - 1; i++) {
+    const current = events[i];
+    const next = events[i + 1];
 
-    if (event.direction === "in") {
-      lastInTime = eventTime;
-    } else if (event.direction === "out" && lastInTime) {
-      totalMs += eventTime.getTime() - lastInTime.getTime();
-      lastInTime = null;
+    const start = current.timestamp;
+    const end = next.timestamp;
+    const durationMs = new Date(end).getTime() - new Date(start).getTime();
+    const durationHours = durationMs / (1000 * 60 * 60);
+
+    let state: "inside" | "outside" | "unknown";
+
+    if (current.direction === "in" && next.direction === "out") {
+      state = "inside";
+    } else if (current.direction === "out" && next.direction === "in") {
+      state = "outside";
+    } else {
+      // in->in or out->out = unknown
+      state = "unknown";
+    }
+
+    periods.push({ start, end, state, durationHours });
+  }
+
+  return periods;
+}
+
+function calculateTotalTimeByState(periods: PresencePeriod[]): {
+  inside: number;
+  outside: number;
+  unknown: number;
+} {
+  let inside = 0;
+  let outside = 0;
+  let unknown = 0;
+
+  for (const period of periods) {
+    if (period.state === "inside") {
+      inside += period.durationHours;
+    } else if (period.state === "outside") {
+      outside += period.durationHours;
+    } else {
+      unknown += period.durationHours;
     }
   }
 
-  return totalMs / (1000 * 60 * 60); // Convert to hours
+  return { inside, outside, unknown };
 }
 
-function calculateDailyStats(events: PresenceEvent[]): DailyStat[] {
-  const dailyMap = new Map<string, { events: PresenceEvent[] }>();
+function splitPeriodAcrossDays(period: PresencePeriod): Map<string, { state: string; hours: number }> {
+  const result = new Map<string, { state: string; hours: number }>();
 
+  const startDate = new Date(period.start);
+  const endDate = new Date(period.end);
+
+  let currentDate = new Date(startDate);
+  currentDate.setHours(0, 0, 0, 0);
+
+  while (currentDate < endDate) {
+    const dayStart = new Date(currentDate);
+    const dayEnd = new Date(currentDate);
+    dayEnd.setDate(dayEnd.getDate() + 1);
+
+    // Calculate overlap between period and this day
+    const overlapStart = startDate > dayStart ? startDate : dayStart;
+    const overlapEnd = endDate < dayEnd ? endDate : dayEnd;
+
+    if (overlapStart < overlapEnd) {
+      const hoursInDay = (overlapEnd.getTime() - overlapStart.getTime()) / (1000 * 60 * 60);
+      const dateKey = currentDate.toISOString().split("T")[0];
+
+      if (!result.has(dateKey)) {
+        result.set(dateKey, { state: period.state, hours: 0 });
+      }
+      const existing = result.get(dateKey)!;
+      existing.hours += hoursInDay;
+    }
+
+    currentDate.setDate(currentDate.getDate() + 1);
+  }
+
+  return result;
+}
+
+function calculateDailyStats(
+  events: PresenceEvent[],
+  periods: PresencePeriod[],
+  reportStartDate: Date,
+  reportEndDate: Date
+): DailyStat[] {
+  const dailyMap = new Map<string, {
+    events: PresenceEvent[];
+    hoursInside: number;
+    hoursOutside: number;
+    hoursUnknown: number;
+  }>();
+
+  // Initialize all days in the report range
+  const currentDate = new Date(reportStartDate);
+  currentDate.setHours(0, 0, 0, 0);
+  const endDate = new Date(reportEndDate);
+  endDate.setHours(23, 59, 59, 999);
+
+  while (currentDate <= endDate) {
+    const dateKey = currentDate.toISOString().split("T")[0];
+    dailyMap.set(dateKey, { events: [], hoursInside: 0, hoursOutside: 0, hoursUnknown: 0 });
+    currentDate.setDate(currentDate.getDate() + 1);
+  }
+
+  // Group events by date
   for (const event of events) {
     const date = event.timestamp.split("T")[0];
-    if (!dailyMap.has(date)) {
-      dailyMap.set(date, { events: [] });
+    if (dailyMap.has(date)) {
+      dailyMap.get(date)!.events.push(event);
     }
-    dailyMap.get(date)!.events.push(event);
+  }
+
+  // Split periods across days
+  for (const period of periods) {
+    const dayHours = splitPeriodAcrossDays(period);
+
+    for (const [date, { state, hours }] of dayHours) {
+      if (dailyMap.has(date)) {
+        const data = dailyMap.get(date)!;
+        if (state === "inside") {
+          data.hoursInside += hours;
+        } else if (state === "outside") {
+          data.hoursOutside += hours;
+        } else {
+          data.hoursUnknown += hours;
+        }
+      }
+    }
+  }
+
+  // Fill gaps with unknown time to reach 24 hours per day
+  for (const [date, data] of dailyMap) {
+    const totalAccountedHours = data.hoursInside + data.hoursOutside + data.hoursUnknown;
+    const missingHours = 24 - totalAccountedHours;
+
+    if (missingHours > 0.01) { // Small threshold for floating point errors
+      data.hoursUnknown += missingHours;
+    }
   }
 
   const stats: DailyStat[] = [];
@@ -44,9 +162,15 @@ function calculateDailyStats(events: PresenceEvent[]): DailyStat[] {
   for (const [date, data] of dailyMap) {
     const entries = data.events.filter((e) => e.direction === "in").length;
     const exits = data.events.filter((e) => e.direction === "out").length;
-    const hoursInside = calculateTimeInside(data.events);
 
-    stats.push({ date, hoursInside, entries, exits });
+    stats.push({
+      date,
+      hoursInside: data.hoursInside,
+      hoursOutside: data.hoursOutside,
+      hoursUnknown: data.hoursUnknown,
+      entries,
+      exits,
+    });
   }
 
   return stats.sort((a, b) => a.date.localeCompare(b.date));
@@ -83,15 +207,24 @@ export async function generateReportData(
 
   const totalEntries = events.filter((e) => e.direction === "in").length;
   const totalExits = events.filter((e) => e.direction === "out").length;
-  const totalTimeInside = calculateTimeInside(events);
-  const dailyStats = calculateDailyStats(events);
+
+  const periods = calculatePresencePeriods(events);
+  const dailyStats = calculateDailyStats(events, periods, startDate, endDate);
   const hourlyDistribution = calculateHourlyDistribution(events);
+
+  // Calculate totals from daily stats (which include gap filling)
+  const totalTimeInside = dailyStats.reduce((sum, day) => sum + day.hoursInside, 0);
+  const totalTimeOutside = dailyStats.reduce((sum, day) => sum + day.hoursOutside, 0);
+  const totalTimeUnknown = dailyStats.reduce((sum, day) => sum + day.hoursUnknown, 0);
 
   return {
     startDate: startDate.toISOString().split("T")[0],
     endDate: endDate.toISOString().split("T")[0],
     events,
+    periods,
     totalTimeInside,
+    totalTimeOutside,
+    totalTimeUnknown,
     totalEntries,
     totalExits,
     dailyStats,
@@ -109,6 +242,8 @@ export async function generateHtmlReport(
   return template({
     ...reportData,
     totalTimeInsideFormatted: reportData.totalTimeInside.toFixed(1),
+    totalTimeOutsideFormatted: reportData.totalTimeOutside.toFixed(1),
+    totalTimeUnknownFormatted: reportData.totalTimeUnknown.toFixed(1),
     dailyStatsJson: JSON.stringify(reportData.dailyStats),
     hourlyDistributionJson: JSON.stringify(reportData.hourlyDistribution),
     generatedAt: new Date().toISOString(),
@@ -134,11 +269,13 @@ export async function generateReport(
   const filename = `report_${reportData.startDate}_to_${reportData.endDate}.html`;
   const filePath = await saveReport(html, filename);
 
-  console.log(`Report generated: ${filePath}`);
-  console.log(`Period: ${reportData.startDate} to ${reportData.endDate}`);
-  console.log(`Total entries: ${reportData.totalEntries}`);
-  console.log(`Total exits: ${reportData.totalExits}`);
-  console.log(`Total time inside: ${reportData.totalTimeInside.toFixed(1)} hours`);
+  console.log(`Bericht erstellt: ${filePath}`);
+  console.log(`Zeitraum: ${reportData.startDate} bis ${reportData.endDate}`);
+  console.log(`Eintritte gesamt: ${reportData.totalEntries}`);
+  console.log(`Austritte gesamt: ${reportData.totalExits}`);
+  console.log(`Zeit drinnen: ${reportData.totalTimeInside.toFixed(1)} Stunden`);
+  console.log(`Zeit draußen: ${reportData.totalTimeOutside.toFixed(1)} Stunden`);
+  console.log(`Zeit unbekannt: ${reportData.totalTimeUnknown.toFixed(1)} Stunden`);
 
   return filePath;
 }

@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="de">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Greta Presence Report</title>
+  <title>Greta Anwesenheitsbericht</title>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <style>
     * {
@@ -44,6 +44,15 @@
       border-radius: 10px;
       box-shadow: 0 2px 10px rgba(0,0,0,0.1);
       text-align: center;
+    }
+    .stat-card.inside {
+      border-left: 4px solid #27ae60;
+    }
+    .stat-card.outside {
+      border-left: 4px solid #e74c3c;
+    }
+    .stat-card.unknown {
+      border-left: 4px solid #95a5a6;
     }
     .stat-value {
       font-size: 2.5rem;
@@ -114,42 +123,50 @@
 </head>
 <body>
   <div class="container">
-    <h1>Greta Presence Report</h1>
-    <p class="subtitle">{{startDate}} to {{endDate}}</p>
+    <h1>Greta Anwesenheitsbericht</h1>
+    <p class="subtitle">{{startDate}} bis {{endDate}}</p>
 
     <div class="stats-grid">
-      <div class="stat-card">
+      <div class="stat-card inside">
         <div class="stat-value">{{totalTimeInsideFormatted}}</div>
-        <div class="stat-label">Hours Inside</div>
+        <div class="stat-label">Stunden Drinnen</div>
+      </div>
+      <div class="stat-card unknown">
+        <div class="stat-value">{{totalTimeUnknownFormatted}}</div>
+        <div class="stat-label">Stunden Unbekannt</div>
+      </div>
+      <div class="stat-card outside">
+        <div class="stat-value">{{totalTimeOutsideFormatted}}</div>
+        <div class="stat-label">Stunden Draußen</div>
       </div>
       <div class="stat-card">
         <div class="stat-value">{{totalEntries}}</div>
-        <div class="stat-label">Total Entries</div>
+        <div class="stat-label">Eintritte</div>
       </div>
       <div class="stat-card">
         <div class="stat-value">{{totalExits}}</div>
-        <div class="stat-label">Total Exits</div>
+        <div class="stat-label">Austritte</div>
       </div>
     </div>
 
     <div class="chart-container">
-      <h3 class="chart-title">Daily Time Inside (Hours)</h3>
+      <h3 class="chart-title">Tägliche Aufenthaltszeit</h3>
       <canvas id="dailyChart"></canvas>
     </div>
 
     <div class="chart-container">
-      <h3 class="chart-title">Activity by Hour of Day</h3>
+      <h3 class="chart-title">Aktivität nach Tageszeit</h3>
       <canvas id="hourlyChart"></canvas>
     </div>
 
     <div class="events-table">
-      <h2>Recent Events</h2>
+      <h2>Letzte Ereignisse</h2>
       <table>
         <thead>
           <tr>
-            <th>Time</th>
-            <th>Direction</th>
-            <th>Confidence</th>
+            <th>Zeit</th>
+            <th>Richtung</th>
+            <th>Konfidenz</th>
           </tr>
         </thead>
         <tbody>
@@ -164,32 +181,62 @@
       </table>
     </div>
 
-    <p class="footer">Generated at {{generatedAt}}</p>
+    <div style="max-width: 800px; margin: 30px auto; padding: 20px; background: white; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); font-size: 0.9rem; line-height: 1.8;">
+      <h3 style="margin-bottom: 15px; color: #2c3e50;">Logik der Anwesenheitserkennung</h3>
+      <p style="margin-bottom: 10px;">Die Anwesenheit wird basierend auf aufeinanderfolgenden Ereignissen berechnet:</p>
+      <ul style="margin-left: 20px; margin-bottom: 10px;">
+        <li><strong style="color: #27ae60;">Drinnen:</strong> Zeitraum zwischen "in" und "out" Ereignissen (auch über mehrere Tage hinweg)</li>
+        <li><strong style="color: #e74c3c;">Draußen:</strong> Zeitraum zwischen "out" und "in" Ereignissen (auch über mehrere Tage hinweg)</li>
+        <li><strong style="color: #95a5a6;">Unbekannt:</strong> Zeiträume zwischen gleichen Ereignissen ("in"→"in" oder "out"→"out"), sowie Zeiträume ohne aufgezeichnete Ereignisse</li>
+      </ul>
+      <p style="margin-top: 15px; color: #666; font-size: 0.85rem;">Jeder Tag wird auf genau 24 Stunden aufgefüllt. Fehlende Zeit wird als "Unbekannt" markiert.</p>
+    </div>
+    <p class="footer">Erstellt am {{generatedAt}}</p>
   </div>
 
   <script>
     const dailyStats = {{{dailyStatsJson}}};
     const hourlyDistribution = {{{hourlyDistributionJson}}};
 
-    // Daily chart
+    // Daily chart - stacked bar chart
     new Chart(document.getElementById('dailyChart'), {
       type: 'bar',
       data: {
         labels: dailyStats.map(d => d.date),
-        datasets: [{
-          label: 'Hours Inside',
-          data: dailyStats.map(d => d.hoursInside.toFixed(1)),
-          backgroundColor: 'rgba(52, 152, 219, 0.7)',
-          borderColor: 'rgba(52, 152, 219, 1)',
-          borderWidth: 1
-        }]
+        datasets: [
+          {
+            label: 'Drinnen',
+            data: dailyStats.map(d => d.hoursInside.toFixed(1)),
+            backgroundColor: 'rgba(39, 174, 96, 0.7)',
+            borderColor: 'rgba(39, 174, 96, 1)',
+            borderWidth: 1
+          },
+          {
+            label: 'Unbekannt',
+            data: dailyStats.map(d => d.hoursUnknown.toFixed(1)),
+            backgroundColor: 'rgba(149, 165, 166, 0.7)',
+            borderColor: 'rgba(149, 165, 166, 1)',
+            borderWidth: 1
+          },
+          {
+            label: 'Draußen',
+            data: dailyStats.map(d => d.hoursOutside.toFixed(1)),
+            backgroundColor: 'rgba(231, 76, 60, 0.7)',
+            borderColor: 'rgba(231, 76, 60, 1)',
+            borderWidth: 1
+          }
+        ]
       },
       options: {
         responsive: true,
         scales: {
+          x: {
+            stacked: true
+          },
           y: {
+            stacked: true,
             beginAtZero: true,
-            title: { display: true, text: 'Hours' }
+            title: { display: true, text: 'Stunden' }
           }
         }
       }
@@ -202,14 +249,14 @@
         labels: hourlyDistribution.map(h => h.hour + ':00'),
         datasets: [
           {
-            label: 'Entries',
+            label: 'Eintritte',
             data: hourlyDistribution.map(h => h.entries),
             backgroundColor: 'rgba(39, 174, 96, 0.7)',
             borderColor: 'rgba(39, 174, 96, 1)',
             borderWidth: 1
           },
           {
-            label: 'Exits',
+            label: 'Austritte',
             data: hourlyDistribution.map(h => h.exits),
             backgroundColor: 'rgba(231, 76, 60, 0.7)',
             borderColor: 'rgba(231, 76, 60, 1)',
@@ -222,7 +269,7 @@
         scales: {
           y: {
             beginAtZero: true,
-            title: { display: true, text: 'Count' }
+            title: { display: true, text: 'Anzahl' }
           }
         }
       }
